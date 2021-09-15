@@ -1,0 +1,27 @@
+@startuml
+
+left to right direction
+
+skinparam Monochrome true
+skinparam Shadowing false
+
+' Replace the following placeholders. Delete this line when complete. 
+
+rectangle LoginScreen {
+    rectangle Username {
+    }
+    rectangle Password {
+    }
+    rectangle OK {
+    }
+    rectangle Cancel {
+    }
+}
+
+rectangle Dashboard {
+}
+
+OK --> Dashboard :successful login
+
+
+@enduml

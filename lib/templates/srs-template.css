@@ -1,0 +1,532 @@
+body {
+    margin: auto;
+    padding-right: 1em;
+    padding-left: 1em;
+    width: 960px !important;
+    color: #777;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    color: #777;
+}
+
+pre {
+    border: 1px dotted gray;
+    background-color: #ececec;
+    color: #111111;
+    padding: 0.5em;
+    white-space: pre-wrap;
+    /* CSS 3 */
+    white-space: -moz-pre-wrap;
+    /* Mozilla, since 1999 */
+    white-space: -pre-wrap;
+    /* Opera 4-6 */
+    white-space: -o-pre-wrap;
+    /* Opera 7 */
+    word-wrap: break-word;
+    /* Internet Explorer 5.5+ */
+}
+
+code {
+    font-family: monospace;
+    white-space: pre-wrap;
+    /* CSS 3 */
+    white-space: -moz-pre-wrap;
+    /* Mozilla, since 1999 */
+    white-space: -pre-wrap;
+    /* Opera 4-6 */
+    white-space: -o-pre-wrap;
+    /* Opera 7 */
+    word-wrap: break-word;
+    /* Internet Explorer 5.5+ */
+    /* border-bottom: 1px solid rgb(100, 100, 100);
+    border-top: 1px solid rgb(100, 100, 100);
+    border-left: 1px solid rgb(100, 100, 100);
+    border-right: 1px solid rgb(100, 100, 100); */
+    padding: 2px;
+    /* background-color: #EFEFEF; */
+    border-radius: 5px;
+    /* border-style: dotted; */
+    color: #333333;
+}
+
+h1 a,
+h2 a {
+    text-decoration: none;
+    color: #7a5ada;
+}
+
+h3 a,
+h4 a,
+h5 a {
+    text-decoration: none;
+    color: #333;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: normal;
+    text-align: left;
+    color: #444;
+    border-bottom: 1px solid rgb(90, 90, 90);
+    padding: 10px 10px 10px 10px;
+}
+
+h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border-bottom: 1px dotted rgb(55, 55, 55);
+    color: rgb(100, 100, 100);
+}
+
+h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border: none;
+    color: rgb(100, 100, 100);
+}
+
+h4,
+h5 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border-bottom: none;
+    color: rgb(100, 100, 100);
+}
+
+h1 {
+    font-size: 36px;
+}
+
+h2 {
+    font-size: 22px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h4 {
+    font-size: 18px;
+}
+
+h5 {
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(54, 90, 122);
+}
+
+h1.title {
+    font-size: 48px;
+    font-weight: normal;
+    text-align: left;
+    color: #333;
+    border-bottom: 2px solid rgb(58, 58, 58);
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+p.subtitle {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: left;
+    color: #444;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+p.author {
+    font-weight: bold;
+    text-align: left;
+    color: #444;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+dt code {
+    font-weight: bold;
+}
+
+dd p {
+    margin-top: 0;
+}
+
+table {
+    padding: 10px;
+    border-radius: 10px;
+    border-bottom: 1px dashed rgb(193, 205, 205);
+    border-top: 1px dashed rgb(193, 205, 205);
+    border-left: 1px dashed rgb(193, 205, 205);
+    border-right: 1px dashed rgb(193, 205, 205);
+}
+
+th {
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    border-top: 1px dashed rgb(193, 205, 205);
+}
+
+#footer {
+    padding-top: 1em;
+    font-size: 70%;
+    color: gray;
+    text-align: center;
+}
+
+.def {
+    border-left-style: solid;
+    border-left-width: 5px;
+    border-left-color: rgb(146, 146, 146);
+    padding-left: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: rgb(125, 125, 125);
+    min-height: 30px;
+    margin-top: 20px;
+    background-color: rgb(245, 245, 245);
+}
+
+defprefix {
+    font-style: italic;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+    content: "def ";
+    font-size: 16px;
+    color: rgb(80, 80, 80);
+}
+
+term {
+    font-style: italic;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    color: rgb(190, 190, 190);
+}
+
+desc {
+    font-style: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: rgb(125, 125, 125);
+}
+
+.update {
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: dashed;
+    border-color: rgb(200, 200, 200);
+    background: rgb(250, 250, 250);
+    padding: 10px;
+    min-height: 15px;
+    color: rgb(190, 190, 190);
+    margin-top: 5px;
+}
+
+.warning {
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: dashed;
+    border-color: rgb(200, 200, 200);
+    background: rgb(255, 255, 225);
+    padding: 10px;
+    min-height: 15px;
+    color: rgb(100, 70, 21);
+    margin-top: 5px;
+}
+
+.example {
+    background: rgb(238, 250, 250);
+    padding: 15px;
+    min-height: 50px;
+    color: rgb(90, 90, 90);
+    border-radius: 10px;
+    border-bottom: 1px dashed rgb(193, 205, 205);
+    border-top: 1px dashed rgb(193, 205, 205);
+    border-left: 1px dashed rgb(193, 205, 205);
+    border-right: 1px dashed rgb(193, 205, 205);
+    border-spacing: 5px 5px 5px 5px;
+    padding: 15px 15px 15px 15px;
+}
+
+.bad-example {
+    background: rgb(255, 253, 255);
+    padding: 25px;
+    min-height: 50px;
+    color: rgb(100, 70, 21);
+    border-radius: 10px;
+    border-bottom: 1px solid rgb(239, 0, 69);
+    border-top: 1px solid rgb(239, 0, 69);
+    border-left: 1px solid rgb(239, 0, 69);
+    border-right: 1px solid rgb(239, 0, 69);
+    border-spacing: 5px 5px 5px 5px;
+    padding: 15px 15px 15px 15px;
+    border-style: dotted;
+}
+
+.dialog_popup {
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgba(200, 200, 200, 1.0);
+    border: 1px 1px 1px 1px;
+    border-style: solid;
+    padding: 25px 15px 15px 15px;
+    min-width: 300px;
+    max-width: 320px;
+    min-height: 175px;
+    max-height: 450px;
+}
+
+.dialog_popup_title {
+    text-align: center;
+    min-width: 200px;
+    min-height: 50px;
+    font-weight: bold;
+    color: black;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dialog_popup_message {
+    text-align: center;
+    min-width: 200px;
+    min-height: 50px;
+    font-weight: normal;
+    color: black;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 20px;
+}
+
+.dialog_popup_button {
+    float: left;
+    text-align: center;
+    min-height: 50px;
+    height: 50px;
+    font-weight: normal;
+    color: rgb(105, 105, 105);
+    font-size: 22px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dialog_popup_button_divider {
+    float: left;
+    text-align: center;
+    max-width: 1px;
+    width: 1px;
+    min-height: 50px;
+    font-weight: normal;
+    border-style: solid;
+    border-color: rgba(100, 100, 100, 1.0);
+    border-left: 1px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-top: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.alternate_dialog_main {
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgba(200, 200, 200, 1.0);
+    border: 1px 1px 1px 1px;
+    border-style: solid;
+    padding: 25px 15px 15px 15px;
+    min-width: 300px;
+    max-width: 320px;
+    min-height: 150px;
+    max-height: 550px;
+    margin: 10px 10px 10px 10px;
+}
+
+.alternate_dialog_title {
+    text-align: center;
+    min-width: 200px;
+    min-height: 30px;
+    font-weight: bold;
+    color: rgba(60, 60, 60, 1.0);
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.alternate_dialog_message {
+    text-align: center;
+    min-width: 200px;
+    min-height: 50px;
+    font-weight: normal;
+    color: rgba(60, 60, 60, 1.0);
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 15px;
+}
+
+.alternate_dialog_int_button {
+    float: left;
+    text-align: center;
+    min-height: 50px;
+    font-weight: normal;
+    color: rgb(100, 100, 100);
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.alternate_dialog_ext_button {
+    text-align: center;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgba(200, 200, 200, 1.0);
+    border: 1px 1px 1px 1px;
+    border-style: solid;
+    padding: 15px 15px 15px 15px;
+    min-width: 300px;
+    max-width: 320px;
+    height: 25px;
+    margin: 10px 10px 10px 10px;
+    color: rgba(120, 120, 120, 1.0);
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.btm_div {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(200, 200, 200, 1.0);
+    border-bottom-width: 98%;
+    margin-bottom: 15px;
+}
+
+.header_view {
+    border-radius: 0px;
+    border-width: 1px;
+    border-color: rgba(200, 200, 200, 1.0);
+    border: 1px 1px 1px 1px;
+    border-style: solid;
+    padding: 10px 15px 15px 15px;
+    min-width: 300px;
+    max-width: 420px;
+    width: 420px;
+    height: 100px;
+    text-align: center;
+}
+
+.hdr1 {
+    color: rgba(120, 120, 120, 1.0);
+    font-size: 22px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.hdr2 {
+    color: rgba(120, 120, 120, 1.0);
+    font-size: 16px;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.hdr3 {
+    color: rgba(120, 120, 120, 1.0);
+    font-size: 12px;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.red {
+    color: #D1132A;
+}
+
+.yellow {
+    color: #e58c17;
+}
+
+.green {
+    color: #6e8428;
+}
+
+.fig {
+    border-radius: 5px;
+    border: 0.5px 0.5px 0.5px 0.5px;
+    border-style: dashed;
+    border-color: #EEE;
+    padding: 10px 10px 10px 10px;
+}
+
+.figure_text {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+figcaption {
+    margin-top: 30px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+figcaption:before {
+    content: "Figure ";
+    font-weight: bold;
+}
+
+kbd {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #91132A;
+    border-color: rgb(125, 125, 125);
+}
+
+.http-req-label {
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: #333;
+    color: white;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 2px;
+}
+
+.http-res-label {
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: #555;
+    color: white;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 2px;
+}
+
+.http-req-type-get {
+    border-color: rgb(125, 125, 125);
+    border-width: 1px;
+    border-radius: 4px;
+    color: #002599;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 2px;
+    background-color: #DDDDDD;
+}
+
+.http-req-type-post {
+    border-color: rgb(125, 125, 125);
+    border-width: 1px;
+    border-radius: 4px;
+    color: #775233;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 2px;
+    background-color: #DDDDDD;
+}
+
+.http-res-label-json {
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: #840033;
+    color: white;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 2px;
+}

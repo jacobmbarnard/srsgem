@@ -1,0 +1,20 @@
+@startuml
+
+skinparam Monochrome true
+skinparam Shadowing false
+
+' Replace the following placeholders. Delete this line when complete. 
+
+(*) --> "Action Step 1"
+
+if "Success" then
+  -->[true] "Action Step 2"
+  --> "Action Step 3"
+  -right-> (*)
+else
+  ->[false] "Failure Step"
+  --> (*)
+endif
+
+
+@enduml

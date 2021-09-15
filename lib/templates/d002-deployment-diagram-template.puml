@@ -1,0 +1,25 @@
+@startuml
+
+skinparam Monochrome true
+skinparam Shadowing false
+
+' Replace the following placeholders. Delete this line when complete. 
+card LocalNetwork {
+    node LargeSystem [
+        Large System
+    ]
+}
+
+card CorporateNetwork {
+    database MainDatabase [
+        Main DB
+        ----
+        SoT
+        ---
+        IPv4: 123.456.789.10
+    ]
+}
+
+LargeSystem -- MainDatabase :connects with
+
+@enduml

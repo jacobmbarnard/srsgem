@@ -1,0 +1,11 @@
+@startuml
+
+skinparam Monochrome true
+skinparam Shadowing false
+
+' Replace the following placeholders. Delete this line when complete. 
+
+PersonOne -> System: some hand-off request
+System -> PersonOne: some hand-off response
+
+@enduml

@@ -1,0 +1,112 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/srsgem_main"
+require_relative "../lib/srsgem_linter"
+require_relative "../lib/srsgem_cleaner"
+
+@arguments = Array.new
+@state = {
+  :'init' => false,
+  :'help' => false,
+  :'build' => false,
+  :'error' => "NONE",
+}
+
+def show_error
+  puts "ERROR - #{@state[:'error']}"
+end
+
+def show_help
+  puts """
+SRSGem Command Line Interface (CLI)
+Options:
+
+    init [SRS_DIRECTORY_NAME]   initializes a new SRS source directory with Markdown
+                                and PlantUML placeholder information
+
+                         lint   checks for missing or corrupted SRS markdown or puml files
+                                also checks for non-Ruby dependencies
+
+                        build   executed from within an SRS source directory to create
+                                an HTML formatted SRS output file
+
+                        clean   removes the 'output' directory and all its contents from
+                                within SRS source folder
+
+                         help   show help
+
+"""
+end
+
+### BEGIN ARGUMENT EVAL###
+ARGV.each do |arg|
+  @arguments << arg # absorb arguments
+end
+
+### DETERMINE OPERATION
+
+def defaulting_to_help
+  return false unless @arguments.length == 0
+  show_help
+  true
+end
+
+def show_help_with_srsgem_commandline
+  return false unless @arguments.length == 1
+  return false unless @arguments[0].eql? "help"
+  show_help
+  true
+end
+
+def initialize_new_srs_directory
+  return false unless @arguments.length == 1
+  return false unless @arguments[0].eql? "init"
+  SRSGemMain.new.srs_initializer.init_bare_srsgem_dir
+  true
+end
+
+def initialize_new_srs_directory_with_target
+  return false unless @arguments.length == 2
+  return false unless @arguments[0].eql? "init"
+  return false unless @arguments[1].match?(/[a-zA-Z]/)
+  target_dir = "./" + @arguments[1]
+  SRSGemMain.new.srs_initializer.init_bare_srsgem_dir(target_dir)
+  true
+end
+
+def build_srs_from_current_directory
+  return false unless @arguments.length == 1
+  return false unless @arguments[0].eql? "build"
+  srsgem_object = SRSGemMain.new
+  builder_object = srsgem_object.srs_builder
+  builder_object.build_srs
+  true
+end
+
+def perform_lint_within_srs_source_dir
+  return false unless @arguments.length == 1
+  return false unless @arguments[0].eql? "lint"
+  SRSGemLinter.lint
+  true
+end
+
+def clean_output_directory
+  return false unless @arguments.length == 1
+  return false unless @arguments[0].eql? "clean"
+  SRSGemCleaner.clean
+  true
+end
+
+def execute_appropriate_operation
+  return true if defaulting_to_help == true
+  return true if show_help_with_srsgem_commandline == true
+  return true if build_srs_from_current_directory == true
+  return true if initialize_new_srs_directory == true
+  return true if initialize_new_srs_directory_with_target == true
+  return true if perform_lint_within_srs_source_dir == true
+  return true if clean_output_directory == true
+  @state[:'error'] = "Argument pattern '#{@arguments}' not recognized. Bailing out."
+  show_error
+end
+
+execute_appropriate_operation

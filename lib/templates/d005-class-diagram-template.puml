@@ -1,0 +1,12 @@
+@startuml
+
+skinparam Monochrome true
+skinparam Shadowing false
+
+' Replace the following placeholders. Delete this line when complete. 
+
+ClassOne ---> ClassTwo :can produce
+ClassTwo *-- ClassThree
+ClassThree o-- ClassOne
+
+@enduml
