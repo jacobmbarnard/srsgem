@@ -1,5 +1,5 @@
-require 'counter_container'
-require 'homogeneous_descendant_linking_nestable'
+require "counter_container"
+require "homogeneous_descendant_linking_nestable"
 
 # An intelligent counter which can enumerate headers and a subheader.
 # Can be used in a recursive fashion (i.e. singly-linked list of
@@ -16,7 +16,7 @@ class SRSHeaderCounter
   include CounterContainer
   include HomogeneousDescendantLinkingNestable
 
-  MD_HEADERS_PREFIX_STRINGS = ['#', '##', '###', '####', '#####']
+  MD_HEADERS_PREFIX_STRINGS = ["#", "##", "###", "####", "#####"]
   MD_HEADERS_REGEXES = [/\A#\s/, /\A##\s/, /\A###\s/, /\A####\s/, /\A#####\s/]
 
   def self.index_for_markdown_header_matching_hashes_regex(string)
@@ -67,7 +67,7 @@ class SRSHeaderCounter
   end
 
   def header_number_for_index(index)
-    h_num = ''
+    h_num = ""
     (0..index).each do |i|
       c = descendant_at(i)
       h_num << "#{c.count}."

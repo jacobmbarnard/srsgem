@@ -43,6 +43,7 @@ class SRSInitialization
          template_filepath =~ /\A.*\.md\Z/   ||
          template_filepath =~ /\A.*\.css\Z/  ||
          template_filepath =~ /\A.*\.yml\Z/  ||
+         template_filepath =~ /\A.*\.yaml\Z/  ||
          template_filepath =~ /\A.*\.png\Z/  ||
          template_filepath =~ /\A.*\.log\Z/  ||
          template_filepath =~ /\A\.gitignore-template\Z/

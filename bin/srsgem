@@ -30,6 +30,8 @@ Options:
                         build   executed from within an SRS source directory to create
                                 an HTML formatted SRS output file
 
+                                --skip-puml    skips compiling PlantUML files
+
                         clean   removes the 'output' directory and all its contents from
                                 within SRS source folder
 
@@ -75,12 +77,19 @@ def initialize_new_srs_directory_with_target
 end
 
 def build_srs_from_current_directory
-  return false unless @arguments.length == 1
-  return false unless @arguments[0].eql? "build"
-  srsgem_object = SRSGemMain.new
-  builder_object = srsgem_object.srs_builder
-  builder_object.build_srs
-  true
+  if @arguments.length == 1
+    return false unless @arguments[0].eql? "build"
+    srsgem_object = SRSGemMain.new
+    builder_object = srsgem_object.srs_builder
+    builder_object.build_srs
+    true
+  elsif @arguments.length == 2
+    return false unless @arguments[0].eql? "build"
+    return false unless @arguments[1].eql? "--skip-puml"
+    srsgem_object = SRSGemMain.new
+    builder_object = srsgem_object.srs_builder
+    builder_object.build_srs(false)
+  end
 end
 
 def perform_lint_within_srs_source_dir

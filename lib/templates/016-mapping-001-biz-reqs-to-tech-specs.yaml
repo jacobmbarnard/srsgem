@@ -1,0 +1,12 @@
+type: mapping
+title: Appendix R. Business Requirements to Technical Specifications Mapping
+comments: A mapping of the business requirements and technical specifications in this SRS.
+mapping:
+  - First Requirement Title:
+    - Title of UI Technical Specification
+    - Title of UX Technical Specification
+  - Second Requirement Title:
+    - Title of UX Technical Specification
+    - Title of Database Access Specification
+  - Third Requirement Title:
+    - Title of Database Access Specification

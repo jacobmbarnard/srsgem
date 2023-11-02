@@ -1,13 +1,14 @@
-# SRSGem
+<img src="README/logo.svg" width=300/>
 
 ## What is it?
 
-  - a tool which translates [Markdown](https://en.wikipedia.org/wiki/Markdown) and [PlantUML](https://plantuml.com/) into a clean, styled, robust Software Requirements Specification (SRS) document which can be opened in any modern web browser
+**SRSGem** is a tool which translates [Markdown](https://en.wikipedia.org/wiki/Markdown), [YAML](https://yaml.org/), and [PlantUML](https://plantuml.com/) into a clean, styled, robust Software Requirements Specification (SRS) document which can be opened in any modern web browser.
 
 ## Prerequisites
 
-  - Install [PlantUML](https://plantuml.com/starting) on your machine.
-    + (Look into the package manager for your OS.)
+  - Ruby
+  - Ruby Gems
+  - [PlantUML](https://plantuml.com/starting)
 
 ## Installation
 
@@ -29,7 +30,7 @@ After installation, if you just want to see SRSGem build an SRS with placeholder
 
   1. `cd` into directory `MyNewSRS`.
   2. Open `title.yml` with your favorite editor and replace the placeholder content.
-  3. Open the markdown (`.md`) files and fill them out.
+  3. Open the markdown (`.md`, `.markdown`) files and fill them out.
   4. Open the PlantUML (`.puml`) files and fill them out.
   5. Create additional markdown or PlantUML files.
     
@@ -49,6 +50,7 @@ After installation, if you just want to see SRSGem build an SRS with placeholder
 ## Why SRSGem?
 
   - because traditional SRS documents are bulky and require a specific word processor or other proprietary application
+  - because editing individual, smaller, focussed-content `markdown` and `puml` files is more manageable
   - because as word processor documents travel between different systems, styling gets lost
   - because extracting just the right information from a ticketing or tracking system is painful
   - because stakeholders don't want to login to a tracking or wiki application to have to read about an application
@@ -66,19 +68,15 @@ After installation, if you just want to see SRSGem build an SRS with placeholder
   - NOT a bug tracking system
   - NOT a web application
   - NOT a proprietary document format specification
-  - NOT a source code-to-documentation transpiler
+  - NOT a source code comments to documentation transpiler
 
 ## Project
 
 ### SRS
 
-(*Yes, an SRS for the program that makes SRSs.*)
+(*Yes, an SRS for the program that makes SRS's.*)
 
   - *Coming soon!*
-
-### Task Management
-
-  - [SRSGem Tickets Repository](https://github.com/jmbarnardgh/srsgem_tickets)
 
 ## Q&A
 
@@ -95,7 +93,7 @@ After installation, if you just want to see SRSGem build an SRS with placeholder
   - **Do I need to manually export `png` or `jpg` files from PlantUML source for the SRS to include the diagrams?**
     + **ANSWER:** No. SRSGem will auto-convert your `puml` PlantUML files to `svg` files and include them in auto-generated diagram sections of the SRS output.
   - **Do I need an application server to open an HTML SRS file?**
-    + **ANSWER:** No. The output SRS file is simple HTML and requires no server-side component to open and view. Simply open `output/srs.html` with your favorite browser. Alternatively, you could run `srsgem opensrs` within your SRS Project Directory.
+    + **ANSWER:** No. The output SRS file is simple HTML and requires no server-side component to open and view. Simply open `output/srs.html` with your favorite browser.
   - **Do I need to be online to open a generated SRS?**
     + **ANSWER:** No. However, if you want to implement some sort of cross origin resource sharing (CORS) for content of your SRS, that is totally on you and up to you. 
   - **Can I supply my own CSS?**
@@ -107,7 +105,7 @@ After installation, if you just want to see SRSGem build an SRS with placeholder
 
 ### Why have an SRS?
 
-In the morass of development work, it can be easy to get lost in a sea of tasks. What **are** we working on? What **can** we work on? What **should** we work on? What **did** we work on? What has been **done**?
+In the morass of development work, it can be easy to get lost in a sea of tasks. What **are** we working on? What **can** we work on? What **should** we work on? What **did** we work on?
 
   - When discussing a released version of a system, an SRS describes what went into that release in a clear, concise, navigable fashion.
   - When discussing an in-development version of a system, an SRS helps distinguish *goals* from *present* and *past* work.
@@ -132,8 +130,8 @@ Specifications set forth in the current SRS are informed in part by the previous
 
 Not only should an SRS contain 'specifications,' but it should also contain information regarding *why* certain specifications were chosen. This allows stakeholders to more readily ascent to specified goals without wasting precious time debating why certain things have to be a certain way.
 
-Writing good meta-information helps to achieve a meta-goal - a goal for the goals, as it were. The goal of meta-information in an SRS is to help rigidify the goals for the system. Being able to easily navigate to explanatory information in an SRS saves copious amounts of time in the way of stakeholder discussions/meetings.
+Writing good meta-information helps to achieve a meta-goal - a goal for the goals, as it were. The goal of meta-information in an SRS is to help solidify the goals for the system. Being able to easily navigate to explanatory information in an SRS saves copious amounts of time in the way of stakeholder discussions/meetings.
 
-  - example specification and its meta-information:
+  - Example specification and its meta-information:
     + a *technical specification* states that the application must function offline
-    + related meta-information (*technical constraint*) states that physical location of most users using the application is a place where WiFi, Ethernet, cable, etc. forms of connectivity are poor or do not exist
+    + related meta-information (*technical constraint*) states that physical location of most users using the application is a place where Wi-Fi, Ethernet, cable, etc. forms of connectivity are poor or do not exist

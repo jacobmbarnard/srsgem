@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "SRSGem"
-  s.version = "0.0.1"
+  s.version = "0.0.5"
   s.summary = "Leverages PlantUML and Pandoc to convert puml and md to an Software Requirements Specification (SRS)."
   s.description = "Use srsgem CLT to create a template directory for making an SRS, fill out the template files, then run srsgem build to get beautiful HTML SRS output."
   s.authors = ["Jacob Barnard"]

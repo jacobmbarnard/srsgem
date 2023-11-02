@@ -12,6 +12,6 @@ class GemIntegration
   end
 
   def self.templates_dir_from_gem_home
-    GemIntegration.gem_home + "/gems/SRSGem-0.0.1/lib/templates"
+    GemIntegration.gem_home + "/gems/SRSGem-0.0.5/lib/templates"
   end
 end
