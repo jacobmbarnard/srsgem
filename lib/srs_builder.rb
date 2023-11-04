@@ -6,9 +6,12 @@ require_relative "markdown_enhancements/srs_business_glossary_markdown_tag"
 require_relative "markdown_enhancements/srs_technical_glossary_markdown_tag"
 require_relative "markdown_enhancements/srs_section_markdown_tag"
 
+require_relative "markdown_enhancements/srs_yaml_transpiler"
+
 require_relative "pandoc_support/pandoc_helper"
 require_relative "srs_header_counter"
 require_relative "logit"
+require_relative "srs_build_announcer"
 
 class SRSBuilder
   attr_accessor :header_counter
@@ -56,27 +59,18 @@ class SRSBuilder
   def yaml_file_names
     #TODO: write me
     files = files_in_cur_dir
-    yaml_fns = Array.new
+    yaml_file_names = Array.new
     files.each do |item|
-      puts "found a .yaml extension!" if /.*\.yaml/ =~ item
+      LogIt.log_it "found a .yaml extension!" if /.*\.yaml/ =~ item
       if (/.*\.yml/ =~ item || /.*\.yaml/ =~ item) &&
          !(item.eql?("title-template.yml")) && !(item.eql?("build-number-template.yml"))
         file = File.open("#{Dir.pwd}/#{item}")
-        puts "PUSHING YAML FILE: #{item}"
+        LogIt.log_it "PUSHING YAML FILE: #{item}"
         LogIt.log_it "Compiling YAML mapping #{item}..."
-        yaml_fns.push(item)
+        yaml_file_names.push(item)
       end
     end
-    yaml_fns
-  end
-
-  # Converts the YAML into a bullet list mapping top-level items to the
-  # lower level items, and automatically generating a markdown anchor
-  # link for them
-  #
-  # @returns a markdown string showing the mapping indicated in the YAML
-  def yaml_mapping_to_markdown
-    #TODO: write me
+    yaml_file_names
   end
 
   # Assembles all markdown into a single string
@@ -100,38 +94,15 @@ class SRSBuilder
 
 " ""
       elsif (/.*\.yml/ =~ item || /.*\.yaml/ =~ item) && !(item.eql?("title-template.yml")) && !(item.eql?("build-number-template.yml"))
-        # TODO: finish writing me
         LogIt.log_it "Transpiling YAML mapping #{item} to markdown"
-        yaml_file_reader = File.new("#{Dir.pwd}/#{item}", 'r')
+        yaml_file_reader = File.new("#{Dir.pwd}/#{item}", "r")
         yml = yaml_file_reader.read
         yaml_file_reader.close
-  
+
         yml_str = yml.to_s
         yaml_obj = YAML.load(yml_str)
-        yaml_mapping = Array.new
-        yaml_mapping = yaml_obj[:mapping]
         markdown_string += "\n"
-        yaml_obj.each do |k, v|
-          val = yaml_obj[k]
-          if k.eql? 'title'
-            markdown_string += "# #{val}\n"
-            markdown_string += "\n"
-          elsif k.eql? 'comments'
-            markdown_string += "#{val}\n"
-          elsif k.eql? 'mapping'
-            markdown_string += "\n"
-            val.each do |mapping_obj|
-              mapping_obj.each do |map_obj_k, map_obj_v|
-                mapping_object_md = "- [#{map_obj_k}](##{map_obj_k.downcase.gsub(' ', '-')})\n"
-                markdown_string += mapping_object_md
-                map_obj_v.each do |map_obj_v_elem|
-                  mapping_object_md = "  - [#{map_obj_v_elem}](##{map_obj_v_elem.downcase.gsub(' ', '-')})\n"
-                  markdown_string += mapping_object_md
-                end
-              end
-            end
-          end
-        end
+        markdown_string = SRSYAMLTranspiler.yaml_to_markdown(yaml_obj, markdown_string)
       end
     end
     numbered_headers markdown_string
@@ -139,10 +110,10 @@ class SRSBuilder
 
   def export_svgs_from_plantuml
     files = files_in_cur_dir
-    puts "Searching for PlantUML files..."
+    LogIt.log_it "Searching for PlantUML files..."
     files.each do |item|
       if /.*\.puml/ =~ item
-        puts "Converting to SVG: #{item}"
+        LogIt.log_it "Converting to SVG: #{item}"
         puml_command = "plantuml #{Dir.pwd}/#{item} -svg"
         %x(#{puml_command})
         log_file_object = File.new("#{Dir.pwd}/build.log", "a")
@@ -191,43 +162,64 @@ class SRSBuilder
     srs_html_file_w.close
   end
 
-  def build_srs(build_plantuml = true)
-    puts "Attempting to build SRS..."
-    LogIt.log_build
+  def build_timestamp_and_number_markdown
+    yaml_file_reader = File.new("#{Dir.pwd}/#{"build-number.yml"}", "r")
+    yml = yaml_file_reader.read
+    yaml_file_reader.close
 
-    clear_output
+    yml_str = yml.to_s
+    yaml_obj = YAML.load(yml_str)
+    build_number = yaml_obj["last_build"]["number"].to_i
+    @build_number = build_number
+    datestamp = yaml_obj["last_build"]["date"].to_s
+    @datestamp = datestamp
+    str = "\nDocument Generated: #{@datestamp} (build #{@build_number})"
+    str
+  end
 
-    export_svgs_from_plantuml unless build_plantuml == false
+  def update_build_num_and_timestamp
+    file_path = "#{Dir.pwd}/build-number.yml"
+    yaml_obj = YAML.load_file(file_path)
+    @build_number = yaml_obj["last_build"]["number"].to_i + 1
+    @datestamp = Time.now.to_s
+    yaml_obj["last_build"]["number"] = @build_number
+    yaml_obj["last_build"]["date"] = @datestamp
+    File.open(file_path, "w") { |file| file.write yaml_obj.to_yaml }
+  end
 
-    # TODO: Build markdown from YAML files
-    # use NNN-mapping- as file prefix to convert
-
-    puts "Assembling markdown files..."
-    markdown_str = assembled_markdown
-
-    puts "Copying other resources..."
-    copy_resources
-    FileUtils.touch(SINGLE_TMP_MD_RELATAIVE_FILEPATH)
-    markdown_str += "\nDocument Generated: #{@datestamp} (build #{@build_number})"
-
-    puts "Transpiling SRSGem-specific Markdown..."
+  def transpile_specific_markdown(markdown_str)
     markdown_str = SRSSectionMarkdownTag.new.transpile_matches_in(markdown_str)
     markdown_str = SRSBusinessGlossaryMarkdownTag.new.transpile_matches_in(markdown_str)
     markdown_str = SRSTechnicalGlossaryMarkdownTag.new.transpile_matches_in(markdown_str)
+  end
 
+  def compile_markdown(markdown_str)
     temp_compiled_markdown_file = File.new(SINGLE_TMP_MD_RELATAIVE_FILEPATH, "w")
     temp_compiled_markdown_file.write(markdown_str)
     temp_compiled_markdown_file.close
-
-    puts "Compiling markdown..."
     PandocHelper.build_standard_output(SINGLE_TMP_MD_RELATAIVE_FILEPATH, OUTPUT_LOCATION)
+  end
 
+  def build_srs(build_plantuml = true)
+    SRSBuildAnnouncer.announce_starting_build
+    LogIt.log_build
+    clear_output
+    export_svgs_from_plantuml unless build_plantuml == false
+    SRSBuildAnnouncer.announce_assembling_markdown
+    markdown_str = assembled_markdown
+    SRSBuildAnnouncer.announce_copying_resources
+    copy_resources
+    FileUtils.touch(SINGLE_TMP_MD_RELATAIVE_FILEPATH)
+    update_build_num_and_timestamp
+    markdown_str += build_timestamp_and_number_markdown
+    SRSBuildAnnouncer.announce_compiling_srsgem_specific_md
+    transpile_specific_markdown(markdown_str)
+    SRSBuildAnnouncer.announce_compiling_markdown
+    compile_markdown(markdown_str)
     FileUtils.remove(SINGLE_TMP_MD_RELATAIVE_FILEPATH)
-
     adjust_html_output_css_filepath
-
-    puts "Done!"
-    puts "Output is at #{OUTPUT_LOCATION}."
+    SRSBuildAnnouncer.announce_done
+    SRSBuildAnnouncer.announce_output_location(OUTPUT_LOCATION)
     true
   end
 end

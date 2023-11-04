@@ -13,9 +13,8 @@ class LogIt
     yml_str = yml.to_s
     yml_obj = YAML.load(yml_str)
     build_num_string = yml_obj['last_build']['number']
-    n = build_num_string.to_i(16)
-    n += 0x1
-    @build_number = n.to_s(16)
+    n = build_num_string.to_i
+    @build_number = n.to_s
     yml_obj['last_build']['number'] = @build_number
     @datestamp = Time.now
     yml_obj['last_build']['date'] = @datestamp.to_s

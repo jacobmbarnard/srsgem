@@ -1,0 +1,8 @@
+---
+# Determines whether the PlantUML output SVG files are
+# kept with the source `.puml` files and placed in the
+# output folder, or only placed in the output folder
+# 
+# true: svg output is kept in both locations
+# false: svg output is only kept in the output location
+keep-copy-of-plantuml-svg-with-source: true

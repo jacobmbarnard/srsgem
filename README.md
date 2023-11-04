@@ -2,7 +2,7 @@
 
 ## What is it?
 
-**SRSGem** is a tool which translates [Markdown](https://en.wikipedia.org/wiki/Markdown), [YAML](https://yaml.org/), and [PlantUML](https://plantuml.com/) into a clean, styled, robust Software Requirements Specification (SRS) document which can be opened in any modern web browser.
+**SRSGem** is a tool which translates [Markdown](https://en.wikipedia.org/wiki/Markdown) and other plain text into a clean, styled, robust Software Requirements Specification (SRS) document which can be opened in any modern web browser.
 
 ## Prerequisites
 

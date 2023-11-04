@@ -1,3 +1,4 @@
 *.gem
 .vscode
 .atom
+.DS_Store
