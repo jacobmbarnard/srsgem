@@ -6,8 +6,8 @@
 
 ## Prerequisites
 
-  - Ruby
-  - Ruby Gems
+  - [Ruby](https://www.ruby-lang.org/)
+  - [Ruby Gems](https://rubygems.org/)
   - [PlantUML](https://plantuml.com/starting)
 
 ## Installation
