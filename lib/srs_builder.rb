@@ -8,6 +8,7 @@ require_relative "markdown_enhancements/srs_section_markdown_tag"
 
 require_relative "markdown_enhancements/srs_yaml_transpiler"
 
+require_relative "file_manager"
 require_relative "pandoc_support/pandoc_helper"
 require_relative "srs_header_counter"
 require_relative "logit"
@@ -44,21 +45,10 @@ class SRSBuilder
     new_string
   end
 
-  def files_in_cur_dir
-    files = []
-    current_dir_path = Dir.pwd.to_s
-    current_dir = Dir.new(current_dir_path)
-    current_dir.each do |file|
-      files.push(file)
-    end
-    current_dir.close
-    files.sort!
-  end
-
   # Gets all the YAML mapping files locating the same directory as the markdown
   def yaml_file_names
     #TODO: write me
-    files = files_in_cur_dir
+    files = FileManager.files_in_cur_dir
     yaml_file_names = Array.new
     files.each do |item|
       LogIt.log_it "found a .yaml extension!" if /.*\.yaml/ =~ item
@@ -76,7 +66,7 @@ class SRSBuilder
   # Assembles all markdown into a single string
   def assembled_markdown
     markdown_string = ""
-    files = files_in_cur_dir
+    files = FileManager.files_in_cur_dir
     files.each do |item|
       if (/.*\.md/ =~ item || /.*\.markdown/ =~ item) &&
          !item.upcase.eql?("README.MD") && !item.upcase.eql?("README.MARKDOWN")
@@ -109,7 +99,7 @@ class SRSBuilder
   end
 
   def export_svgs_from_plantuml
-    files = files_in_cur_dir
+    files = FileManager.files_in_cur_dir
     LogIt.log_it "Searching for PlantUML files..."
     files.each do |item|
       if /.*\.puml/ =~ item
