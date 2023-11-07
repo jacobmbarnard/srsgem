@@ -181,6 +181,7 @@ class SRSBuilder
     markdown_str = SRSSectionMarkdownTag.new.transpile_matches_in(markdown_str)
     markdown_str = SRSBusinessGlossaryMarkdownTag.new.transpile_matches_in(markdown_str)
     markdown_str = SRSTechnicalGlossaryMarkdownTag.new.transpile_matches_in(markdown_str)
+    markdown_str
   end
 
   def compile_markdown(markdown_str)
@@ -203,7 +204,7 @@ class SRSBuilder
     update_build_num_and_timestamp
     markdown_str += build_timestamp_and_number_markdown
     SRSBuildAnnouncer.announce_compiling_srsgem_specific_md
-    transpile_specific_markdown(markdown_str)
+    markdown_str = transpile_specific_markdown(markdown_str)
     SRSBuildAnnouncer.announce_compiling_markdown
     compile_markdown(markdown_str)
     FileUtils.remove(SINGLE_TMP_MD_RELATAIVE_FILEPATH)
