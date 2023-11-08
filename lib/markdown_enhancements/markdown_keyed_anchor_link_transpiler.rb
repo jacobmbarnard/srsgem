@@ -23,7 +23,7 @@
 # be transpiled into `<a href="#foo_abc-123-xyz">Abc 123 Xyz</a>`.
 class MarkdownKeyedAnchorLinkTranspiler
 
-  # @param rgx [Regexp] regular expression used to match
+  # @param [Regexp] content_rgx_str expression used to match
   def initialize(content_rgx_str = ".+", ky = "MarkdownKeyedAnchorLink", pfx = "", sfx = "")
     @content_regex = rgx_str
     @key = ky
@@ -31,12 +31,22 @@ class MarkdownKeyedAnchorLinkTranspiler
     @suffix = sfx
   end
 
+  # Finds substrings that match `@context_regex`.
+  #
+  # @param [String] string the String in which regex matches are to be found
+  # @return an array containing all regex matches in the provided string
   def all_matches(string)
     modded_str = "\\[#{@content_regex}\\]\\(#{@key}\\)"
     r = Regexp.new(modded_str)
     string.enum_for(:scan, r).map { Regexp.last_match }
   end
 
+  # Transpiles the provided Markdown string into HTML based on 
+  # values of attributes of `self`. Only substrings of the provided
+  # string that match `@contant_regex` will be transpiled.
+  #
+  # @param [String] string containing the Markdown to be transpiled
+  # @return transpiled string
   def transpile(string)
     modded_match = string.dup
     modded_match.gsub!("[", "")

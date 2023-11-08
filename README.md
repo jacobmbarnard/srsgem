@@ -16,7 +16,7 @@
 
 ## Creating a New SRS
 
-  1. Run `srsgem init MyNewSRS`.
+  1. Run `srsgem init MyNewSRS`
 
 ## Quick Start
 
@@ -60,7 +60,7 @@ After installation, if you just want to see SRSGem build an SRS with placeholder
   - because navigating one HTML page using anchor tags is faster than navigating a slow, clunky heavy web application
   - because wikis and trackers are easily broken and difficult to fix
   - because people who write documentation for coders should know how to code a little too
-  - because [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) is better
+  - because [FOSS](https://www.gnu.org/philosophy/free-sw.html) is better
 
 ## What is SRSGem not?
 

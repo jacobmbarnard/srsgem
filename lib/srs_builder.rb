@@ -191,6 +191,11 @@ class SRSBuilder
     PandocHelper.build_standard_output(SINGLE_TMP_MD_RELATAIVE_FILEPATH, OUTPUT_LOCATION)
   end
 
+  # Used to build human-readable documentation. Transpiles/compiles
+  # project code into a clean, styled, SRS.
+  #
+  # @param [Boolean] build_plantuml whether or not to include PlantUML in the build
+  # @return whether the build succeeded
   def build_srs(build_plantuml = true)
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build

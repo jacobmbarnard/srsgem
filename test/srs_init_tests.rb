@@ -9,17 +9,17 @@ class TestAdd < Test::Unit::TestCase
   def test_srs_initialization_create_empty_file_in_dir
     #ensure clean
     init_object = SRSInitialization.new
-    assert_false(File.exists?("empty_file.md"))
+    assert_false(File.exist?("empty_file.md"))
 
     #perform primary test
     init_object.create_empty_file_in_srs_dir("empty_file.md")
-    assert_true(File.exists?("empty_file.md"))
+    assert_true(File.exist?("empty_file.md"))
     contents = File.open("empty_file.md", "r").read
     assert_equal(contents, "")
 
     #clean up
     FileUtils.remove("empty_file.md")
-    assert_false(File.exists?("empty_file.md"))
+    assert_false(File.exist?("empty_file.md"))
   end
 
   def test_populate_file_with_contents
@@ -28,11 +28,11 @@ class TestAdd < Test::Unit::TestCase
 
     #ensure clean
     init_object = SRSInitialization.new
-    assert_false(File.exists?("tmp.md"))
+    assert_false(File.exist?("tmp.md"))
 
     #peform primary test
     init_object.create_empty_file_in_srs_dir("tmp.md")
-    assert_true(File.exists?("tmp.md"))
+    assert_true(File.exist?("tmp.md"))
     file_reader = File.new("tmp.md", "r")
     file_reader_contents = file_reader.read
     assert_equal(file_reader_contents, "")
@@ -40,7 +40,7 @@ class TestAdd < Test::Unit::TestCase
 
     content_string = "ABC123"
     init_object.populate_file_with_contents("tmp.md", content_string)
-    assert_true(File.exists?("tmp.md"))
+    assert_true(File.exist?("tmp.md"))
 
     modified_file = File.new("tmp.md", "r")
     modified_file_contents = modified_file.read
@@ -51,6 +51,6 @@ class TestAdd < Test::Unit::TestCase
 
     #clean up
     FileUtils.remove("tmp.md")
-    assert_false(File.exists?("tmp.md"))
+    assert_false(File.exist?("tmp.md"))
   end
 end
