@@ -1,1 +1,1 @@
-Code of Conduct for this project is the [JMBSC3 Version 1](https://github.com/jacobmbarnard/jmbsc3/blob/cdb2caf19285f641fc11814c43282b6d72ebbdd5/CODE_OF_CONDUCT.md).
+Code of Conduct for this project is the [JMBSC3 Version 1.0.1](https://github.com/jacobmbarnard/jmbsc3/blob/53259b85ced98e271280d1e7459d5eec2de95530/CODE_OF_CONDUCT.md).
