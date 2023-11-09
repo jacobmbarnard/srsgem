@@ -23,7 +23,7 @@
 # be transpiled into `<a href="#foo_abc-123-xyz">Abc 123 Xyz</a>`.
 class MarkdownKeyedAnchorLinkTranspiler
 
-  # @param [Regexp] content_rgx_str expression used to match
+  # @param content_rgx_str [Regexp] expression used to match
   def initialize(content_rgx_str = ".+", ky = "MarkdownKeyedAnchorLink", pfx = "", sfx = "")
     @content_regex = rgx_str
     @key = ky
@@ -33,7 +33,7 @@ class MarkdownKeyedAnchorLinkTranspiler
 
   # Finds substrings that match `@context_regex`.
   #
-  # @param [String] string the String in which regex matches are to be found
+  # @param string [String] the String in which regex matches are to be found
   # @return an array containing all regex matches in the provided string
   def all_matches(string)
     modded_str = "\\[#{@content_regex}\\]\\(#{@key}\\)"
@@ -45,12 +45,15 @@ class MarkdownKeyedAnchorLinkTranspiler
   # values of attributes of `self`. Only substrings of the provided
   # string that match `@contant_regex` will be transpiled.
   #
-  # @param [String] string containing the Markdown to be transpiled
+  # @param string [String] containing the Markdown to be transpiled
   # @return transpiled string
   def transpile(string)
     modded_match = string.dup
     modded_match.gsub!("[", "")
     modded_match.gsub!("]", "")
+    # TODO: Include matches to plurals of singular words where possible.
+    # TODO: Consider the above TODO in light of multi-word terms.
+    # TODO: Consider the above TODO as being configurable (e.g. plural for last word of a term instead of all words in a term)
     modded_match.gsub!("(#{@key})", "")
     match_content = modded_match.dup
     modded_match.gsub!(/\s/, "-")
@@ -58,6 +61,12 @@ class MarkdownKeyedAnchorLinkTranspiler
     modded_match
   end
 
+  # For every match in `string` to `@content_regex`,
+  # replaces said match with a new substring generated
+  # by the `transpile` method.
+  #
+  # @param string [String] the string in which matches are transpiled in place
+  # @return the original string with matches transpiled in place
   def transpile_matches_in(string)
     str = string.dup
     all_matches(str).each do |m|
