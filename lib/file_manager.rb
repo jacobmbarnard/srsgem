@@ -9,4 +9,9 @@ class FileManager
     current_dir.close
     files.sort!
   end
+  
+  def self.yaml_file_path(yaml_file_name)
+    current_dir_path = Dir.pwd.to_s
+    f_path = current_dir_path + '/' + yaml_file_name
+  end
 end

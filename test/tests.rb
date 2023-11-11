@@ -11,3 +11,6 @@ require_relative "srs_header_counter_tests"
 
 # test SRSSectionMarkdownTag class
 require_relative "srs_section_markdown_tag_tests"
+
+# test SRSGemConfig
+require_relative "srsgem_config_tests"
