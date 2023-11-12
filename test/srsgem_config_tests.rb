@@ -3,8 +3,9 @@ require "test/unit"
 require_relative "../lib/srs_gem_config"
 
 class TestAdd < Test::Unit::TestCase
-  def test_increment
+  def test_access_configs
     SRSGemConfig.populate_configs
-    puts SRSGemConfig.configs
+    puts "configs: #{SRSGemConfig.configs.to_s}"
+    assert_true(SRSGemConfig.configs[:keep_copy_of_plantuml_svg_with_source])
   end
 end

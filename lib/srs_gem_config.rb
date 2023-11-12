@@ -1,16 +1,20 @@
 require_relative 'file_manager'
+require 'yaml'
 
 class SRSGemConfig
   CONFIG_FILE_NAME = "config.yml"
-
-  attr_accessor :configs
 
   @@configs = {
     :keep_copy_of_plantuml_svg_with_source => true
   }
 
+  def self.configs
+    @@configs
+  end
+
   def self.populate_configs
-    path = FileManager.yaml_file_path(CONFIG_FILE_NAME)
+    path = FileManager.yaml_file_path('lib/templates/config.yml')
+    puts path
     file_reader = File.new(path, "r")
     yml = file_reader.read
     file_reader.close
