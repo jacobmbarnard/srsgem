@@ -2,7 +2,6 @@ require "test/unit"
 
 ####### Collection of Unit Tests #######
 
-
 # test user initializing new SRS project directory
 require_relative "srs_init_tests"
 
