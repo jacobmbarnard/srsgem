@@ -7,5 +7,6 @@ class TestAdd < Test::Unit::TestCase
     SRSGemConfig.populate_configs
     puts "configs: #{SRSGemConfig.configs.to_s}"
     assert_true(SRSGemConfig.configs[:keep_copy_of_plantuml_svg_with_source])
+    assert_true(SRSGemConfig.configs[:build_plantuml])
   end
 end

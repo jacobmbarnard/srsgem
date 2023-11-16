@@ -1,7 +1,33 @@
+#! YAML
+
 ---
+################################################################################
+# Source Search Paths
+################################################################################
+
+# File paths relative to project directory
+
+markdown_search_folder: '.' # project directory 
+markdown_search_is_recursive: false
+
+yaml_mappings_search_folder: '.' # project directory 
+yaml_mappings_search_is_recursive: false
+
+
+
+
+
+
+################################################################################
+# PlantUML Flags
+################################################################################
+
+# Whether to build PlantUML documents.
+build_plantuml: true
+
 # Determines whether the PlantUML output SVG files are
 # kept with the source `.puml` files and placed in the
-# output folder, or only placed in the output folder
+# output folder, or only placed in the output folder.
 # 
 # true: svg output is kept in both locations
 # false: svg output is only kept in the output location

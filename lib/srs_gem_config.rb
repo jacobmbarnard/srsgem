@@ -5,6 +5,7 @@ class SRSGemConfig
   CONFIG_FILE_NAME = "config.yml"
 
   @@configs = {
+    :build_plantuml => true,
     :keep_copy_of_plantuml_svg_with_source => true
   }
 
@@ -21,6 +22,7 @@ class SRSGemConfig
 
     yml_str = yml.to_s
     yaml_obj = YAML.load(yml_str)
+    @@configs[:build_plantuml] = yaml_obj[:build_plantuml.to_s]
     @@configs[:keep_copy_of_plantuml_svg_with_source] = yaml_obj[:keep_copy_of_plantuml_svg_with_source.to_s]
   end
 end

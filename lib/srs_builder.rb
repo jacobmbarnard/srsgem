@@ -200,7 +200,11 @@ class SRSBuilder
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build
     clear_output
-    export_svgs_from_plantuml unless build_plantuml == false
+    if build_plantuml
+      export_svgs_from_plantuml
+    elsif SRSGemConfig.configs[:build_plantuml]
+      export_svgs_from_plantuml
+    end
     SRSBuildAnnouncer.announce_assembling_markdown
     markdown_str = assembled_markdown
     SRSBuildAnnouncer.announce_copying_resources
