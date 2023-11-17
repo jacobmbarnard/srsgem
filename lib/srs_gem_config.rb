@@ -1,6 +1,7 @@
 require_relative 'file_manager'
 require 'yaml'
 
+# Gets configs from config file for an SRS project.
 class SRSGemConfig
   CONFIG_FILE_NAME = "config.yml"
 
