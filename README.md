@@ -6,10 +6,9 @@
 
 ## Prerequisites
 
-  - [Ruby](https://www.ruby-lang.org/)
-  - [Ruby Gems](https://rubygems.org/)
-  - [PlantUML](https://plantuml.com/starting)
-  - [Pandoc](https://www.pandoc.org/)
+  - Install the [Ruby](https://www.ruby-lang.org/) programming language.
+  - Install [PlantUML](https://plantuml.com/starting) and ensure the `plantuml` command is in your `PATH`.
+  - Install [Pandoc](https://www.pandoc.org/) and ensure the `pandoc` command is in your `PATH`.
 
 ## Installation
 
