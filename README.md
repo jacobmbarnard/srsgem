@@ -9,6 +9,7 @@
   - [Ruby](https://www.ruby-lang.org/)
   - [Ruby Gems](https://rubygems.org/)
   - [PlantUML](https://plantuml.com/starting)
+  - [Pandoc](https://www.pandoc.org/)
 
 ## Installation
 
