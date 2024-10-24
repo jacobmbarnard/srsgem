@@ -12,7 +12,8 @@
 
 ## Installation
 
-  1. `gem install srsgem`
+  1. `rake build`
+  2. `gem install SRSGem-0.0.6.gem`
 
 ## Creating a New SRS
 
