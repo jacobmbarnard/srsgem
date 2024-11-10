@@ -1,6 +1,9 @@
 class PandocHelper
 
-  PANDOC_BUILD_COMMAND_PREFIX = 'pandoc -s -o '
+  DEFAULT_PANDOC_COMMAND = 'pandoc'
+
+  @@pandoc_build_command = DEFAULT_PANDOC_COMMAND
+  @@pandoc_build_command_prefix = "#{@@pandoc_build_command} -s -o "
 
   CSS_TERM = 'css'
   CSS_TITLE = 'srs'
@@ -14,7 +17,7 @@ class PandocHelper
   }
 
   def self.build_standard_output(markdown_relative_filepath, output_relative_filepath)
-    cmd = PANDOC_BUILD_COMMAND_PREFIX +
+    cmd = @@pandoc_build_command_prefix +
           output_relative_filepath    + ' ' +
           OUTPUT_FLAGS[:table_of_contents] + ' ' +
           STANDARD_TITLE_FILE + ' ' +
