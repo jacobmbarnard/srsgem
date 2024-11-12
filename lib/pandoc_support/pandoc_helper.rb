@@ -5,6 +5,15 @@ class PandocHelper
   @@pandoc_build_command = DEFAULT_PANDOC_COMMAND
   @@pandoc_build_command_prefix = "#{@@pandoc_build_command} -s -o "
 
+  def self.pandoc_build_command_prefix
+    @@pandoc_build_command_prefix
+  end
+
+  def self.pandoc_build_command_prefix=(pfx)
+    @@double_at_symbol = pfx
+  end
+
+
   CSS_TERM = 'css'
   CSS_TITLE = 'srs'
   CSS_FILE = "#{CSS_TITLE}.#{CSS_TERM}"
