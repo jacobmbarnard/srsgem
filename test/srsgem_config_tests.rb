@@ -1,6 +1,6 @@
 require "test/unit"
 
-require_relative "../lib/srs_gem_config"
+require_relative "../lib/srsgem_config"
 
 class TestAdd < Test::Unit::TestCase
   def test_access_configs
