@@ -1,3 +1,5 @@
+require 'srs_config_manager'
+
 class PandocHelper
 
   DEFAULT_PANDOC_COMMAND = 'pandoc'

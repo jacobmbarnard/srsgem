@@ -32,3 +32,8 @@ build_plantuml: true
 # true: svg output is kept in both locations
 # false: svg output is only kept in the output location
 keep_copy_of_plantuml_svg_with_source: true
+
+
+# The command or executable to use in order to
+# run the correct build of pandoc.
+pandoc_command: 'pandoc'

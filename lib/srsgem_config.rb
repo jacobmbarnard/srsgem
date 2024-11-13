@@ -1,4 +1,5 @@
 require_relative 'file_manager'
+require_relative 'srsgem_project'
 require 'yaml'
 
 # Gets configs from config file for an SRS project.
@@ -12,6 +13,10 @@ class SRSGemConfig
 
   def self.configs
     @@configs
+  end
+
+  def self.report_project_directory
+    SRSGemProject::PROJECT_DIRECTORY_NAME
   end
 
   def self.populate_configs
