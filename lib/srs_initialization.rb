@@ -1,6 +1,7 @@
 require 'fileutils'
 require_relative 'gem_integration'
 require_relative 'srs_template_content_filter'
+require_relative 'srsgem_project'
 
 # Provides ability for user to initialize the current empty directory
 # with a bare bones SRSGem setup
@@ -64,6 +65,9 @@ class SRSInitialization
 
       scan_and_modify_contents_of_srs_file(template_contents, generated_file_path)
     end
+
+    # Create project directory
+    srsgem_project_dir = Dir.mkdir("#{target_dir}/#{SRSGemProject::PROJECT_DIRECTORY_NAME}")
     puts "SRSGem created new SRS source files with placeholder content in #{target_dir}."
     puts 'Done.'
   end
