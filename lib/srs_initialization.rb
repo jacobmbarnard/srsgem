@@ -68,6 +68,13 @@ class SRSInitialization
 
     # Create project directory
     srsgem_project_dir = Dir.mkdir("#{target_dir}/#{SRSGemProject::PROJECT_DIRECTORY_NAME}")
+
+    # BREAKING CHANGES
+    # 1. config.yml should be moved into the .srsgem folder
+    FileUtils.mv("#{target_dir}/", 'config.yml')
+
+
+
     puts "SRSGem created new SRS source files with placeholder content in #{target_dir}."
     puts 'Done.'
   end
