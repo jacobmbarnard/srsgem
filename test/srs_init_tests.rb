@@ -53,4 +53,12 @@ class TestAdd < Test::Unit::TestCase
     FileUtils.remove("tmp.md")
     assert_false(File.exist?("tmp.md"))
   end
+
+  def test_srs_initialization_create_dot_srsgem_directory
+    # TODO: Write me
+  end
+
+  def test_srs_initialization_template_files_copied_to_dot_srsgem_directory
+    # TODO: Write me
+  end
 end
