@@ -71,7 +71,7 @@ class SRSInitialization
 
     # BREAKING CHANGES
     # 1. config.yml should be moved into the .srsgem folder
-    FileUtils.mv("#{target_dir}/", 'config.yml')
+    FileUtils.mv("#{target_dir}/config.yml", "#{target_dir}/.srsgem/config.yml")
 
 
 
