@@ -63,7 +63,6 @@ class TestAdd < Test::Unit::TestCase
   end
 
   def test_srs_initialization_template_files_copied_to_dot_srsgem_directory
-    # TODO: Write me
     tmp_proj_dir_name = 'tmp_new_srsgem_proj'
     srs_init_obj = SRSInitialization.new
     srs_init_obj.init_bare_srsgem_dir(tmp_proj_dir_name)
