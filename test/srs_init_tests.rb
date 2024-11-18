@@ -71,4 +71,13 @@ class TestAdd < Test::Unit::TestCase
     assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/build.log"))
     FileUtils.remove_dir(tmp_proj_dir_name)
   end
+
+  def test_srs_build_number_functions_in_dotsrsgem_dir
+    # TODO: Write me
+  end
+
+  def test_srs_build_log_can_log_from_within_dotsrsgem_dir
+    # TODO: Write me
+  end
+
 end
