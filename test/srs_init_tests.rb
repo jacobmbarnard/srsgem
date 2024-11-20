@@ -2,6 +2,7 @@ require "test/unit"
 require "fileutils"
 
 require_relative "../lib/srs_initialization"
+require_relative "../lib/srs_builder"
 
 require_relative "srs_header_counter_tests"
 
@@ -73,7 +74,14 @@ class TestAdd < Test::Unit::TestCase
   end
 
   def test_srs_build_number_functions_in_dotsrsgem_dir
-    # TODO: Write me
+    tmp_proj_dir_name = 'tmp_new_srsgem_proj'
+    srs_init_obj = SRSInitialization.new
+    srs_init_obj.init_bare_srsgem_dir(tmp_proj_dir_name)
+    # FileUtils.cd(tmp_proj_dir_name)
+    puts "CURR DIR: " + FileUtils.pwd
+    # FIXME: Manual check working... but following SRSBuilder code not working
+    # srs_builder = SRSBuilder.new
+    FileUtils.remove_dir(tmp_proj_dir_name)
   end
 
   def test_srs_build_log_can_log_from_within_dotsrsgem_dir
