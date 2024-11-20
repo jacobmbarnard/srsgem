@@ -153,7 +153,7 @@ class SRSBuilder
   end
 
   def build_timestamp_and_number_markdown
-    yaml_file_reader = File.new("#{Dir.pwd}/#{"build-number.yml"}", "r")
+    yaml_file_reader = File.new("#{Dir.pwd}/.srsgem/#{"build-number.yml"}", "r")
     yml = yaml_file_reader.read
     yaml_file_reader.close
 
@@ -168,7 +168,7 @@ class SRSBuilder
   end
 
   def update_build_num_and_timestamp
-    file_path = "#{Dir.pwd}/build-number.yml"
+    file_path = "#{Dir.pwd}/.srsgem/build-number.yml"
     yaml_obj = YAML.load_file(file_path)
     @build_number = yaml_obj["last_build"]["number"].to_i + 1
     @datestamp = Time.now.to_s
