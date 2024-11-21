@@ -85,7 +85,10 @@ class TestAdd < Test::Unit::TestCase
   end
 
   def test_srs_build_log_can_log_from_within_dotsrsgem_dir
-    # TODO: Write me
+    # TODO: Finish writing me
+    tmp_proj_dir_name = 'tmp_new_srsgem_proj'
+    srs_init_obj = SRSInitialization.new
+    srs_init_obj.init_bare_srsgem_dir(tmp_proj_dir_name)
   end
 
 end
