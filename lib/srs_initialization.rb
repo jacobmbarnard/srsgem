@@ -6,6 +6,50 @@ require_relative 'srsgem_project'
 # Provides ability for user to initialize the current empty directory
 # with a bare bones SRSGem setup
 class SRSInitialization
+  ADR_STATUS_FOLDERS = %w[proposed accepted deprecated superseded].freeze
+
+  STARTER_ADR_FILENAME = 'ADR-001-[title].md'
+
+  STARTER_ADR_CONTENT = <<~MARKDOWN
+    ## ADR-001: [Brief Title of Decision]
+
+    **Date:** YYYY-MM-DD
+
+    **Status:** Proposed
+
+    ### Context and Problem Statement
+
+    <!-- TODO: Describe the problem being solved. -->
+
+    ### Decision Drivers
+
+    - <!-- TODO: Driver 1 -->
+
+    ### Considered Options
+
+    #### Option 1: [Name]
+
+    <!-- TODO: Description, pros, and cons. -->
+
+    ### Decision Outcome
+
+    **Chosen option:** "[Option name]"
+
+    **Rationale:**
+
+    <!-- TODO: Explain the decision. -->
+
+    **Consequences:**
+
+    - **Good:** <!-- TODO -->
+    - **Bad:** <!-- TODO -->
+
+    ### Links
+
+    - Related ADRs: <!-- TODO -->
+    - References: <!-- TODO -->
+  MARKDOWN
+
   # Creates and empty file at the provided filepath (include file extension)
   def create_empty_file_in_srs_dir(empty_file_filepath)
     FileUtils.remove(empty_file_filepath) if File.exist?(empty_file_filepath)
@@ -29,6 +73,7 @@ class SRSInitialization
     end
     filewriter = File.new(generated_file_path, 'w')
     filewriter.write(updt_contents)
+    filewriter.close
   end
 
   # Initializes directory (./MyNewSRSWithSRSGem by default) with bare bones
@@ -69,6 +114,8 @@ class SRSInitialization
     # Create project directory
     srsgem_project_dir = Dir.mkdir("#{target_dir}/#{SRSGemProject::PROJECT_DIRECTORY_NAME}")
 
+    create_adr_directory_structure(target_dir)
+
     # BREAKING CHANGES
     # 1. config.yml should be moved into the .srsgem folder
     FileUtils.mv("#{target_dir}/config.yml", "#{target_dir}/.srsgem/config.yml")
@@ -79,5 +126,17 @@ class SRSInitialization
 
     puts "SRSGem created new SRS source files with placeholder content in #{target_dir}."
     puts 'Done.'
+  end
+
+  def create_adr_directory_structure(target_dir)
+    adr_root = "#{target_dir}/ADRs"
+    FileUtils.mkdir_p(adr_root)
+
+    ADR_STATUS_FOLDERS.each do |status|
+      FileUtils.mkdir_p("#{adr_root}/#{status}")
+    end
+
+    starter_adr_path = "#{adr_root}/proposed/#{STARTER_ADR_FILENAME}"
+    populate_file_with_contents(starter_adr_path, STARTER_ADR_CONTENT)
   end
 end
