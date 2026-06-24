@@ -72,13 +72,26 @@ After installation, if you just want to see SRSGem build an SRS with placeholder
   - NOT a proprietary document format specification
   - NOT a source code comments to documentation transpiler
 
+## How SRSGem compares
+
+| | SRSGem | Documentation generators (e.g. MkDocs, Sphinx, Pandoc-only) | Task / work management (e.g. Jira, Linear, Confluence) |
+|---|---|---|---|
+| **Primary output** | Single styled HTML SRS from plain-text sources | Sites, PDFs, or multi-page docs from markup | Tickets, wikis, dashboards |
+| **Source format** | Markdown, PlantUML, YAML in your repo | Markdown/reStructuredText/etc. in your repo | Proprietary UI and databases |
+| **Version control** | First-class; all sources are plain text | Strong when sources live in git | Weak; export/copy usually required |
+| **Section numbering** | Automatic from markdown header levels | Varies by tool and theme | Manual or inconsistent |
+| **Diagram workflow** | PlantUML → SVG at build time | Plugin-dependent | Attachments or external tools |
+| **Offline / portable output** | One `srs.html` (+ assets) in `output/` | Varies | Requires login for live systems |
+| **Stakeholder access** | Open HTML in any browser | Often a hosted doc site | Account and permissions required |
+| **Best for** | Formal SRS delivery from git-managed specs | General developer documentation | Day-to-day task tracking and collaboration |
+
 ## Project
 
 ### SRS
 
 (*Yes, an SRS for the program that makes SRS's.*)
 
-  - *Coming soon!*
+The SRSGem project SRS source lives in this repository: [github.com/jacobmbarnard/srsgem](https://github.com/jacobmbarnard/srsgem). Initialize a sample project with `srsgem init` to generate the template SRS structure used for development and demonstration.
 
 ## Q&A
 
