@@ -45,10 +45,9 @@ class SRSBuilder
     new_string
   end
 
-  # Gets all the YAML mapping files locating the same directory as the markdown
+  # Gets all the YAML mapping files from the current directory and subdirectories
   def yaml_file_names
-    #TODO: write me
-    files = FileManager.files_in_cur_dir
+    files = FileManager.all_files_recursive
     yaml_file_names = Array.new
     files.each do |item|
       LogIt.log_it "found a .yaml extension!" if /.*\.yaml/ =~ item
@@ -66,7 +65,7 @@ class SRSBuilder
   # Assembles all markdown into a single string
   def assembled_markdown
     markdown_string = ""
-    files = FileManager.files_in_cur_dir
+    files = FileManager.all_files_recursive
     files.each do |item|
       if (/.*\.md/ =~ item || /.*\.markdown/ =~ item) &&
          !item.upcase.eql?("README.MD") && !item.upcase.eql?("README.MARKDOWN")
@@ -99,7 +98,7 @@ class SRSBuilder
   end
 
   def export_svgs_from_plantuml
-    files = FileManager.files_in_cur_dir
+    files = FileManager.all_files_recursive
     LogIt.log_it "Searching for PlantUML files..."
     files.each do |item|
       if /.*\.puml/ =~ item
@@ -124,14 +123,15 @@ class SRSBuilder
     LogIt.log_it("Begin copying resources...")
     output_dir = "#{Dir.pwd}/output/"
     cpy_cmd = "cp "
-    Dir.foreach(Dir.pwd.to_s) do |item|
+    files = FileManager.all_files_recursive
+    files.each do |item|
       RSRC_RECOGNITION_HASH.each do |subdir, regex_strings|
         regex_strings.each do |pattern|
           next unless Regexp.new(pattern) =~ item
 
           FileUtils.mkdir_p(output_dir + subdir.to_s) unless File.directory?(File.join("output", subdir.to_s))
-          FileUtils.copy(item, File.join(File.join("output", subdir.to_s), item.to_s))
-          command = cpy_cmd + "#{item} " + output_dir + subdir.to_s + "/" + item.to_s
+          FileUtils.copy(File.join(Dir.pwd, item), File.join(File.join("output", subdir.to_s), File.basename(item)))
+          command = cpy_cmd + "#{item} " + output_dir + subdir.to_s + "/" + File.basename(item)
           LogIt.log_it "copying resource #{item} with '#{command}'..."
           `#{command}`
         end
