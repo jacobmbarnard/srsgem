@@ -90,4 +90,38 @@ class TestAdd < Test::Unit::TestCase
     FileUtils.remove_dir(tmp_proj_dir_name)
   end
 
+  def test_srs_initialization_creates_adr_appendix_template
+    tmp_proj_dir_name = 'tmp_adr_appendix_proj'
+    srs_init_obj = SRSInitialization.new
+    srs_init_obj.init_bare_srsgem_dir(tmp_proj_dir_name)
+
+    appendix_path = "#{tmp_proj_dir_name}/018-appendix-C-architectural-decision-records.md"
+    references_path = "#{tmp_proj_dir_name}/019-references.md"
+
+    assert_true(File.exist?(appendix_path))
+    assert_true(File.exist?(references_path))
+
+    appendix_contents = File.read(appendix_path)
+    assert_match(/Appendix C\. Architectural Decision Records/, appendix_contents)
+    refute_match(/^# ADR-/m, appendix_contents)
+
+    FileUtils.remove_dir(tmp_proj_dir_name)
+  end
+
+  def test_srs_initialization_creates_adr_directory_structure
+    tmp_proj_dir_name = 'tmp_adr_dirs_proj'
+    srs_init_obj = SRSInitialization.new
+    srs_init_obj.init_bare_srsgem_dir(tmp_proj_dir_name)
+
+    SRSInitialization::ADR_STATUS_FOLDERS.each do |status|
+      assert_true(Dir.exist?("#{tmp_proj_dir_name}/ADRs/#{status}"))
+    end
+
+    starter_adr_path = "#{tmp_proj_dir_name}/ADRs/proposed/#{SRSInitialization::STARTER_ADR_FILENAME}"
+    assert_true(File.exist?(starter_adr_path))
+    assert_match(/## ADR-001:/, File.read(starter_adr_path))
+
+    FileUtils.remove_dir(tmp_proj_dir_name)
+  end
+
 end
