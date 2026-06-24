@@ -1,4 +1,3 @@
-require_relative 'file_manager'
 require_relative 'srsgem_project'
 require 'yaml'
 
@@ -20,15 +19,12 @@ class SRSGemConfig
   end
 
   def self.populate_configs
-    path = FileManager.yaml_file_path('lib/templates/config.yml')
-    puts path
-    file_reader = File.new(path, "r")
-    yml = file_reader.read
-    file_reader.close
+    path = SRSGemProject.file_path(CONFIG_FILE_NAME)
+    return unless File.exist?(path)
 
-    yml_str = yml.to_s
-    yaml_obj = YAML.load(yml_str)
-    @@configs[:build_plantuml] = yaml_obj[:build_plantuml.to_s]
-    @@configs[:keep_copy_of_plantuml_svg_with_source] = yaml_obj[:keep_copy_of_plantuml_svg_with_source.to_s]
+    yaml_obj = YAML.load_file(path)
+    @@configs[:build_plantuml] = yaml_obj.fetch('build_plantuml', @@configs[:build_plantuml])
+    @@configs[:keep_copy_of_plantuml_svg_with_source] =
+      yaml_obj.fetch('keep_copy_of_plantuml_svg_with_source', @@configs[:keep_copy_of_plantuml_svg_with_source])
   end
 end

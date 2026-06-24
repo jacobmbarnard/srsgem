@@ -3,6 +3,9 @@ require "fileutils"
 
 require_relative "../lib/srs_initialization"
 require_relative "../lib/srs_builder"
+require_relative "../lib/srsgem_project"
+require_relative "../lib/logit"
+require "yaml"
 
 require_relative "srs_header_counter_tests"
 
@@ -74,20 +77,36 @@ class TestAdd < Test::Unit::TestCase
   end
 
   def test_srs_build_number_functions_in_dotsrsgem_dir
-    tmp_proj_dir_name = 'tmp_new_srsgem_proj'
-    srs_init_obj = SRSInitialization.new
-    srs_init_obj.init_bare_srsgem_dir(tmp_proj_dir_name)
-    # FileUtils.cd(tmp_proj_dir_name)
-    srs_builder = SRSBuilder.new
-    FileUtils.remove_dir(tmp_proj_dir_name)
+    tmp_proj_dir_name = 'tmp_build_num_proj'
+    SRSInitialization.new.init_bare_srsgem_dir(tmp_proj_dir_name)
+
+    Dir.chdir(tmp_proj_dir_name) do
+      build_number_path = SRSGemProject.file_path('build-number.yml')
+      initial_number = YAML.load_file(build_number_path)['last_build']['number'].to_i
+
+      SRSBuilder.new.update_build_num_and_timestamp
+
+      updated_number = YAML.load_file(build_number_path)['last_build']['number'].to_i
+      assert_equal(initial_number + 1, updated_number)
+    end
+  ensure
+    FileUtils.remove_dir(tmp_proj_dir_name) if Dir.exist?(tmp_proj_dir_name)
   end
 
   def test_srs_build_log_can_log_from_within_dotsrsgem_dir
-    # TODO: Finish writing me
-    tmp_proj_dir_name = 'tmp_new_srsgem_proj'
-    srs_init_obj = SRSInitialization.new
-    srs_init_obj.init_bare_srsgem_dir(tmp_proj_dir_name)
-    FileUtils.remove_dir(tmp_proj_dir_name)
+    tmp_proj_dir_name = 'tmp_build_log_proj'
+    SRSInitialization.new.init_bare_srsgem_dir(tmp_proj_dir_name)
+
+    Dir.chdir(tmp_proj_dir_name) do
+      LogIt.log_it('test build log entry')
+
+      log_path = SRSGemProject.file_path('build.log')
+      assert_true(File.exist?(log_path))
+      assert_match(/test build log entry/, File.read(log_path))
+      assert_false(File.exist?('build.log'))
+    end
+  ensure
+    FileUtils.remove_dir(tmp_proj_dir_name) if Dir.exist?(tmp_proj_dir_name)
   end
 
   def test_srs_initialization_creates_adr_appendix_template
