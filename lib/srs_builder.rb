@@ -12,6 +12,8 @@ require_relative "file_manager"
 require_relative "pandoc_support/pandoc_helper"
 require_relative "srs_header_counter"
 require_relative "logit"
+require_relative "srsgem_config"
+require_relative "srsgem_project"
 require_relative "srs_build_announcer"
 
 class SRSBuilder
@@ -106,10 +108,7 @@ class SRSBuilder
         LogIt.log_it "Converting to SVG: #{item}"
         puml_command = "plantuml #{Dir.pwd}/#{item} -svg"
         %x(#{puml_command})
-        log_file_object = File.new("#{Dir.pwd}/build.log", "a")
-        log_file_object.write(puml_command.to_s)
-        log_file_object.write(NEWLINE)
-        log_file_object.close
+        LogIt.log_it(puml_command)
       end
     end
   end
@@ -153,7 +152,7 @@ class SRSBuilder
   end
 
   def build_timestamp_and_number_markdown
-    yaml_file_reader = File.new("#{Dir.pwd}/.srsgem/#{"build-number.yml"}", "r")
+    yaml_file_reader = File.new(SRSGemProject.file_path('build-number.yml'), "r")
     yml = yaml_file_reader.read
     yaml_file_reader.close
 
@@ -168,7 +167,7 @@ class SRSBuilder
   end
 
   def update_build_num_and_timestamp
-    file_path = "#{Dir.pwd}/.srsgem/build-number.yml"
+    file_path = SRSGemProject.file_path('build-number.yml')
     yaml_obj = YAML.load_file(file_path)
     @build_number = yaml_obj["last_build"]["number"].to_i + 1
     @datestamp = Time.now.to_s
@@ -197,6 +196,7 @@ class SRSBuilder
   # @param [Boolean] build_plantuml whether or not to include PlantUML in the build
   # @return whether the build succeeded
   def build_srs(build_plantuml = true)
+    SRSGemConfig.populate_configs
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build
     clear_output
