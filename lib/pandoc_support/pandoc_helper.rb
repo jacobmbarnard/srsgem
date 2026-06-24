@@ -1,3 +1,5 @@
+require_relative '../srsgem_config'
+
 class PandocHelper
 
   DEFAULT_PANDOC_COMMAND = 'pandoc'
@@ -10,9 +12,14 @@ class PandocHelper
   end
 
   def self.pandoc_build_command_prefix=(pfx)
-    @@double_at_symbol = pfx
+    @@pandoc_build_command_prefix = pfx
   end
 
+  def self.configure_from_project_config
+    command = SRSGemConfig.configs[:pandoc_command]
+    @@pandoc_build_command = command
+    @@pandoc_build_command_prefix = "#{command} -s -o "
+  end
 
   CSS_TERM = 'css'
   CSS_TITLE = 'srs'

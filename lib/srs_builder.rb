@@ -106,7 +106,7 @@ class SRSBuilder
     files.each do |item|
       if /.*\.puml/ =~ item
         LogIt.log_it "Converting to SVG: #{item}"
-        puml_command = "plantuml #{Dir.pwd}/#{item} -svg"
+        puml_command = SRSGemConfig.plantuml_command_for("#{Dir.pwd}/#{item}")
         %x(#{puml_command})
         LogIt.log_it(puml_command)
       end
@@ -197,6 +197,7 @@ class SRSBuilder
   # @return whether the build succeeded
   def build_srs(build_plantuml = true)
     SRSGemConfig.populate_configs
+    PandocHelper.configure_from_project_config
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build
     clear_output

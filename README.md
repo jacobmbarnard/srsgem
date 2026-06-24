@@ -7,8 +7,7 @@
 ## Prerequisites
 
   - Install the [Ruby](https://www.ruby-lang.org/) programming language.
-  - Install [PlantUML](https://plantuml.com/starting) and ensure the `plantuml` command is in your `PATH`.
-      - (Option to select location of `.jar` file for this is coming soon!)
+  - Install [PlantUML](https://plantuml.com/starting) and ensure the `plantuml` command is in your `PATH`, or set `plantuml_jar_path` in your project's `.srsgem/config.yml` to use a specific `.jar` file.
   - Install [Pandoc](https://www.pandoc.org/) and ensure the `pandoc` command is in your `PATH`.
 
 ## Installation

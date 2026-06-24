@@ -1,4 +1,6 @@
 require_relative 'srs_initialization'
+require_relative 'srsgem_config'
+require_relative 'srsgem_project'
 
 # Helps ensure SRS source directories have all that's needed to build
 # an SRS using SRSGem. Also checks for system dependencies.
@@ -28,8 +30,9 @@ class SRSGemLinter
   end
 
   def self.check_plantuml
-    pandoc_version_cmd_output = %x(plantuml -version)
-    if "#{pandoc_version_cmd_output}".include? "PlantUML version"
+    SRSGemConfig.populate_configs if File.exist?(SRSGemProject.file_path('config.yml'))
+    plantuml_version_cmd_output = %x(#{SRSGemConfig.plantuml_version_command})
+    if "#{plantuml_version_cmd_output}".include? "PlantUML version"
       puts "#{PASSED} PlantUML installed"
     else
       puts "#{FAILED} PlantUML not found."
