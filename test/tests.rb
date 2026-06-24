@@ -13,3 +13,6 @@ require_relative "srs_section_markdown_tag_tests"
 
 # test SRSGemConfig
 require_relative "srsgem_config_tests"
+
+# test FileManager
+require_relative "file_manager_tests"

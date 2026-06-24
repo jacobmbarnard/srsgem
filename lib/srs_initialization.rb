@@ -7,6 +7,7 @@ require_relative 'srsgem_project'
 # with a bare bones SRSGem setup
 class SRSInitialization
   ADR_STATUS_FOLDERS = %w[proposed accepted deprecated superseded].freeze
+  ASSET_SUBFOLDERS = %w[markdown diagrams].freeze
 
   STARTER_ADR_FILENAME = 'ADR-001-[title].md'
 
@@ -115,6 +116,7 @@ class SRSInitialization
     srsgem_project_dir = Dir.mkdir("#{target_dir}/#{SRSGemProject::PROJECT_DIRECTORY_NAME}")
 
     create_adr_directory_structure(target_dir)
+    create_asset_subfolders(target_dir)
 
     # BREAKING CHANGES
     # 1. config.yml should be moved into the .srsgem folder
@@ -138,5 +140,11 @@ class SRSInitialization
 
     starter_adr_path = "#{adr_root}/proposed/#{STARTER_ADR_FILENAME}"
     populate_file_with_contents(starter_adr_path, STARTER_ADR_CONTENT)
+  end
+
+  def create_asset_subfolders(target_dir)
+    ASSET_SUBFOLDERS.each do |folder|
+      FileUtils.mkdir_p(File.join(target_dir, folder))
+    end
   end
 end

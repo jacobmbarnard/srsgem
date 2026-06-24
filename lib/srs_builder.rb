@@ -36,6 +36,44 @@ class SRSBuilder
     @header_counter = SRSHeaderCounter.new
   end
 
+  def project_file_path(relative_path)
+    File.join(Dir.pwd, relative_path)
+  end
+
+  def markdown_source_files
+    FileManager.project_files(
+      search_folder: SRSGemConfig.configs[:markdown_search_folder],
+      recursive: SRSGemConfig.configs[:markdown_search_is_recursive]
+    )
+  end
+
+  def yaml_mapping_source_files
+    FileManager.project_files(
+      search_folder: SRSGemConfig.configs[:yaml_mappings_search_folder],
+      recursive: SRSGemConfig.configs[:yaml_mappings_search_is_recursive]
+    )
+  end
+
+  def assembly_source_files
+    files = []
+    markdown_source_files.each { |item| files << item if markdown_source_file?(item) }
+    yaml_mapping_source_files.each { |item| files << item if yaml_mapping_source_file?(item) }
+    files.uniq.sort
+  end
+
+  def markdown_source_file?(item)
+    /.*\.md\z/i =~ item || /.*\.markdown\z/i =~ item
+  end
+
+  def yaml_mapping_source_file?(item)
+    (/.*\.yml\z/i =~ item || /.*\.yaml\z/i =~ item) &&
+      !item.eql?("title-template.yml") && !item.eql?("build-number-template.yml")
+  end
+
+  def readme_file?(item)
+    File.basename(item).upcase.eql?("README.MD") || File.basename(item).upcase.eql?("README.MARKDOWN")
+  end
+
   # Replaces header hash tags with numbered header hash tags
   def numbered_headers(markdown_string)
     new_string = ""
@@ -49,18 +87,14 @@ class SRSBuilder
 
   # Gets all the YAML mapping files locating the same directory as the markdown
   def yaml_file_names
-    #TODO: write me
-    files = FileManager.files_in_cur_dir
     yaml_file_names = Array.new
-    files.each do |item|
+    yaml_mapping_source_files.each do |item|
+      next unless yaml_mapping_source_file?(item)
+
       LogIt.log_it "found a .yaml extension!" if /.*\.yaml/ =~ item
-      if (/.*\.yml/ =~ item || /.*\.yaml/ =~ item) &&
-         !(item.eql?("title-template.yml")) && !(item.eql?("build-number-template.yml"))
-        file = File.open("#{Dir.pwd}/#{item}")
-        LogIt.log_it "PUSHING YAML FILE: #{item}"
-        LogIt.log_it "Compiling YAML mapping #{item}..."
-        yaml_file_names.push(item)
-      end
+      LogIt.log_it "PUSHING YAML FILE: #{item}"
+      LogIt.log_it "Compiling YAML mapping #{item}..."
+      yaml_file_names.push(item)
     end
     yaml_file_names
   end
@@ -68,26 +102,25 @@ class SRSBuilder
   # Assembles all markdown into a single string
   def assembled_markdown
     markdown_string = ""
-    files = FileManager.files_in_cur_dir
-    files.each do |item|
-      if (/.*\.md/ =~ item || /.*\.markdown/ =~ item) &&
-         !item.upcase.eql?("README.MD") && !item.upcase.eql?("README.MARKDOWN")
-        file = File.open("#{Dir.pwd}/#{item}")
+    assembly_source_files.each do |item|
+      if markdown_source_file?(item) && !readme_file?(item)
+        file = File.open(project_file_path(item))
         LogIt.log_it "Compiling #{item}..."
         text = "" "
 
 #{file.read}
 
 " ""
+        file.close
         markdown_string = "" "
 #{markdown_string}" + "#{NEWLINE}#{NEWLINE} #{text}
 
 [&#x21e7; Table of Contents](\#title-block-header)
 
 " ""
-      elsif (/.*\.yml/ =~ item || /.*\.yaml/ =~ item) && !(item.eql?("title-template.yml")) && !(item.eql?("build-number-template.yml"))
+      elsif yaml_mapping_source_file?(item)
         LogIt.log_it "Transpiling YAML mapping #{item} to markdown"
-        yaml_file_reader = File.new("#{Dir.pwd}/#{item}", "r")
+        yaml_file_reader = File.new(project_file_path(item), "r")
         yml = yaml_file_reader.read
         yaml_file_reader.close
 
@@ -101,15 +134,14 @@ class SRSBuilder
   end
 
   def export_svgs_from_plantuml
-    files = FileManager.files_in_cur_dir
     LogIt.log_it "Searching for PlantUML files..."
-    files.each do |item|
-      if /.*\.puml/ =~ item
-        LogIt.log_it "Converting to SVG: #{item}"
-        puml_command = "plantuml #{Dir.pwd}/#{item} -svg"
-        %x(#{puml_command})
-        LogIt.log_it(puml_command)
-      end
+    markdown_source_files.each do |item|
+      next unless /.*\.puml\z/i =~ item
+
+      LogIt.log_it "Converting to SVG: #{item}"
+      puml_command = "plantuml #{project_file_path(item)} -svg"
+      %x(#{puml_command})
+      LogIt.log_it(puml_command)
     end
   end
 
@@ -121,18 +153,20 @@ class SRSBuilder
 
   def copy_resources
     LogIt.log_it("Begin copying resources...")
-    output_dir = "#{Dir.pwd}/output/"
-    cpy_cmd = "cp "
-    Dir.foreach(Dir.pwd.to_s) do |item|
+    output_root = File.join(Dir.pwd, 'output')
+
+    markdown_source_files.each do |item|
       RSRC_RECOGNITION_HASH.each do |subdir, regex_strings|
         regex_strings.each do |pattern|
-          next unless Regexp.new(pattern) =~ item
+          next unless Regexp.new(pattern) =~ File.basename(item)
 
-          FileUtils.mkdir_p(output_dir + subdir.to_s) unless File.directory?(File.join("output", subdir.to_s))
-          FileUtils.copy(item, File.join(File.join("output", subdir.to_s), item.to_s))
-          command = cpy_cmd + "#{item} " + output_dir + subdir.to_s + "/" + item.to_s
-          LogIt.log_it "copying resource #{item} with '#{command}'..."
-          `#{command}`
+          relative_dir = File.dirname(item)
+          relative_dir = '' if relative_dir == '.'
+          destination_dir = File.join(output_root, subdir.to_s, relative_dir)
+          FileUtils.mkdir_p(destination_dir)
+          destination_path = File.join(destination_dir, File.basename(item))
+          FileUtils.copy(project_file_path(item), destination_path)
+          LogIt.log_it "copying resource #{item} to #{destination_path}..."
         end
       end
     end
@@ -140,13 +174,13 @@ class SRSBuilder
   end
 
   def adjust_html_output_css_filepath
-    srs_html_file = File.new("#{Dir.pwd}/#{OUTPUT_LOCATION}", "r")
+    srs_html_file = File.new(File.join(Dir.pwd, OUTPUT_LOCATION), "r")
     srs_html_file_contents = srs_html_file.read
     srs_html_file.close
 
     srs_html_file_contents.gsub!(/srs.css/, "css/srs.css")
 
-    srs_html_file_w = File.new("#{Dir.pwd}/#{OUTPUT_LOCATION}", "w")
+    srs_html_file_w = File.new(File.join(Dir.pwd, OUTPUT_LOCATION), "w")
     srs_html_file_w.write(srs_html_file_contents)
     srs_html_file_w.close
   end

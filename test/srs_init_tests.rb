@@ -127,6 +127,17 @@ class TestAdd < Test::Unit::TestCase
     FileUtils.remove_dir(tmp_proj_dir_name)
   end
 
+  def test_srs_initialization_creates_asset_subfolders
+    tmp_proj_dir_name = 'tmp_asset_folders_proj'
+    SRSInitialization.new.init_bare_srsgem_dir(tmp_proj_dir_name)
+
+    SRSInitialization::ASSET_SUBFOLDERS.each do |folder|
+      assert_true(Dir.exist?("#{tmp_proj_dir_name}/#{folder}"))
+    end
+
+    FileUtils.remove_dir(tmp_proj_dir_name)
+  end
+
   def test_srs_initialization_creates_adr_directory_structure
     tmp_proj_dir_name = 'tmp_adr_dirs_proj'
     srs_init_obj = SRSInitialization.new
