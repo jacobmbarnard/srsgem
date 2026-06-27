@@ -129,6 +129,7 @@ class SRSGemLinter
   end
 
   def self.lint
+    SRSGemConfig.populate_configs
     issues = Array.new
 
     issues << check_ruby_version
