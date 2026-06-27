@@ -8,6 +8,13 @@ require_relative 'srsgem_project'
 class SRSInitialization
   ADR_STATUS_FOLDERS = %w[proposed accepted deprecated superseded].freeze
 
+  # Directories expected to exist in an SRS source project for verbiage and
+  # other structured content. Used by SRSGemLinter to detect missing structure.
+  # (See issue #52)
+  DIR_SUBPATHS = {
+    "ADRs" => "ADRs"
+  }.freeze
+
   STARTER_ADR_FILENAME = 'ADR-001-[title].md'
 
   STARTER_ADR_CONTENT = <<~MARKDOWN
