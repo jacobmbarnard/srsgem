@@ -10,7 +10,7 @@ require_relative "srs_id_manager"
 #
 # This is the core reusable logic for:
 # - the explicit `srsgem ids assign` command (recommended)
-# - future optional auto-assign during `srsgem build` (when enabled in config)
+# - optional auto-assign during `srsgem build` (when `auto_assign_ids_on_build: true`)
 #
 # Design goals from #47:
 # - safe + idempotent (never overwrites existing IDs)
@@ -44,20 +44,23 @@ class SRSIdAssigner
 
   attr_reader :levels, :changes, :files_modified
 
-  def initialize(levels: nil)
+  def initialize(levels: nil, quiet: false)
     SRSGemConfig.populate_configs
     @levels = normalize_levels(levels || SRSGemConfig.configs[:auto_assign_levels] || DEFAULT_LEVELS)
     @changes = []
     @files_modified = []
+    @quiet = quiet
   end
 
   # Main entry point.
   # Scans project, bootstraps counters from existing IDs, then assigns to missing ones.
   def assign(dry_run: false)
-    puts "srsgem ids assign"
-    puts "  Target header levels: #{@levels.join(', ')}"
-    puts "  (use --dry-run to preview without writing)"
-    puts ""
+    unless @quiet
+      puts "srsgem ids assign"
+      puts "  Target header levels: #{@levels.join(', ')}"
+      puts "  (use --dry-run to preview without writing)"
+      puts ""
+    end
 
     # 1. Bootstrap: make sure our counters know about any manually/previously assigned IDs
     bootstrap_from_existing_ids
@@ -65,11 +68,11 @@ class SRSIdAssigner
     # 2. Find candidate source files (Markdown)
     md_files = find_markdown_files
     if md_files.empty?
-      puts "No Markdown files found to process."
+      puts "No Markdown files found to process." unless @quiet
       return
     end
 
-    puts "Scanning #{md_files.size} Markdown file(s)..."
+    puts "Scanning #{md_files.size} Markdown file(s)..." unless @quiet
 
     # 3. Process each file
     md_files.each do |rel_path|
@@ -77,7 +80,7 @@ class SRSIdAssigner
     end
 
     # 4. Report
-    print_summary(dry_run)
+    print_summary(dry_run) unless @quiet
   end
 
   private
@@ -211,9 +214,9 @@ class SRSIdAssigner
       unless dry_run
         File.write(full_path, new_lines.join)
         @files_modified << rel_path
-        puts "  Assigned IDs in #{rel_path} (#{@changes.count { |c| c[:file] == rel_path }} new)"
+        puts "  Assigned IDs in #{rel_path} (#{@changes.count { |c| c[:file] == rel_path }} new)" unless @quiet
       else
-        puts "  [dry-run] Would assign in #{rel_path}"
+        puts "  [dry-run] Would assign in #{rel_path}" unless @quiet
       end
     end
   end
@@ -233,26 +236,28 @@ class SRSIdAssigner
   def print_summary(dry_run)
     assigned = @changes.size
     if assigned == 0
-      puts "\nNo new stable IDs were needed (all target headers already had IDs or no matches)."
+      puts "\nNo new stable IDs were needed (all target headers already had IDs or no matches)." unless @quiet
       return
     end
 
-    puts "\nSummary:"
-    puts "  New IDs assigned: #{assigned}"
+    puts "\nSummary:" unless @quiet
+    puts "  New IDs assigned: #{assigned}" unless @quiet
     if dry_run
-      puts "  (dry-run mode - no files were modified)"
+      puts "  (dry-run mode - no files were modified)" unless @quiet
     else
-      puts "  Files modified: #{@files_modified.size}"
+      puts "  Files modified: #{@files_modified.size}" unless @quiet
     end
 
     # Group by prefix for nice output
     by_prefix = @changes.group_by { |c| c[:prefix] }
     by_prefix.keys.sort.each do |pfx|
       ids = by_prefix[pfx].map { |c| c[:id] }.sort
-      puts "  #{pfx}: #{ids.join(', ')}"
+      puts "  #{pfx}: #{ids.join(', ')}" unless @quiet
     end
 
-    puts "\nTip: run `srsgem build` to see them in the generated HTML."
-    puts "     (Future: auto-assign can also be enabled via config for `build`.)"
+    unless @quiet
+      puts "\nTip: run `srsgem build` to see them in the generated HTML."
+      puts "     (Auto-assign can also be enabled via `auto_assign_ids_on_build` in config.)"
+    end
   end
 end
