@@ -35,6 +35,9 @@ Options:
                         clean   removes the 'output' directory and all its contents from
                                 within SRS source folder
 
+                        ids     subcommands for stable IDs (traceability)
+                                ids assign [--dry-run]   assign missing IDs to headers
+
                          help   show help
 
 """
@@ -106,9 +109,53 @@ def clean_output_directory
   true
 end
 
+def handle_ids_subcommand
+  return false unless @arguments[0] == "ids"
+  sub = @arguments[1]
+
+  require_relative "../lib/srs_id_assigner"
+
+  if sub == "assign" || sub.nil?
+    dry_run = @arguments.include?("--dry-run") || @arguments.include?("-n")
+    SRSIdAssigner.new.assign(dry_run: dry_run)
+    true
+  else
+    show_ids_help
+    true
+  end
+end
+
+def show_ids_help
+  puts """
+SRSGem IDs Commands (stable traceability)
+
+    ids assign [--dry-run]   Scans the project for Markdown headers at configured
+                             levels (default 1,2,3) and assigns the next stable ID
+                             for the appropriate namespace (BR-*, TS-*, ADR-*, etc.)
+                             where one is missing.
+
+                             IDs are written directly into your source .md files
+                             using the convention:
+
+                                 ## BR-007: The system shall ...
+
+                             The command is idempotent and safe. Existing IDs are
+                             never overwritten. It first syncs counters from any
+                             manually assigned IDs.
+
+                             Use --dry-run / -n to preview changes.
+
+    ids                      show this help
+
+After assigning, run `srsgem build` to include the IDs in output and anchors.
+See GitHub issues #41, #47, #39, #46 etc. for the full traceability feature.
+"""
+end
+
 def execute_appropriate_operation
   return true if defaulting_to_help == true
   return true if show_help_with_srsgem_commandline == true
+  return true if handle_ids_subcommand == true
   return true if build_srs_from_current_directory == true
   return true if initialize_new_srs_directory == true
   return true if initialize_new_srs_directory_with_target == true

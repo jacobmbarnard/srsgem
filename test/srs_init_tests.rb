@@ -5,6 +5,7 @@ require_relative "../lib/srs_initialization"
 require_relative "../lib/srs_builder"
 require_relative "../lib/srsgem_project"
 require_relative "../lib/logit"
+require_relative "../lib/srs_id_manager"
 require "yaml"
 
 require_relative "srs_header_counter_tests"
@@ -73,6 +74,7 @@ class TestAdd < Test::Unit::TestCase
     assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/config.yml"))
     assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/build-number.yml"))
     assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/build.log"))
+    assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/ids.yml"))
     FileUtils.remove_dir(tmp_proj_dir_name)
   end
 
@@ -143,4 +145,43 @@ class TestAdd < Test::Unit::TestCase
     FileUtils.remove_dir(tmp_proj_dir_name)
   end
 
+  def test_srs_id_manager_persists_counters_in_dotsrsgem_dir
+    tmp_proj_dir_name = 'tmp_id_counters_proj'
+    SRSInitialization.new.init_bare_srsgem_dir(tmp_proj_dir_name)
+
+    Dir.chdir(tmp_proj_dir_name) do
+      # Fresh project should have 0 for all prefixes
+      assert_equal(0, SRSIdManager.last_number("BR"))
+      assert_equal(0, SRSIdManager.last_number("ADR"))
+      assert_equal(0, SRSIdManager.last_number("DIAG"))
+
+      # next_id should return formatted string and increment
+      first_br = SRSIdManager.next_id("BR")
+      assert_equal("BR-1", first_br)
+      assert_equal(1, SRSIdManager.last_number("BR"))
+
+      second_br = SRSIdManager.next_id("BR")
+      assert_equal("BR-2", second_br)
+      assert_equal(2, SRSIdManager.last_number("br")) # case insensitive prefix
+
+      # Different prefix
+      first_adr = SRSIdManager.next_id("ADR")
+      assert_equal("ADR-1", first_adr)
+
+      # Verify file persisted correctly
+      ids_path = SRSGemProject.file_path("ids.yml")
+      loaded = YAML.load_file(ids_path)["last_ids"]
+      assert_equal(2, loaded["BR"])
+      assert_equal(1, loaded["ADR"])
+
+      # Also test set_last (for future bootstrap use)
+      SRSIdManager.set_last("TS", 42)
+      assert_equal(42, SRSIdManager.last_number("TS"))
+      assert_equal("TS-43", SRSIdManager.next_id("TS"))
+    end
+  ensure
+    FileUtils.remove_dir(tmp_proj_dir_name) if Dir.exist?(tmp_proj_dir_name)
+  end
+
 end
+

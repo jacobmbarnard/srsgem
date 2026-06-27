@@ -15,6 +15,7 @@ require_relative "logit"
 require_relative "srsgem_config"
 require_relative "srsgem_project"
 require_relative "srs_build_announcer"
+require_relative "srs_id_manager"
 
 class SRSBuilder
   attr_accessor :header_counter
@@ -106,7 +107,7 @@ class SRSBuilder
     files.each do |item|
       if /.*\.puml/ =~ item
         LogIt.log_it "Converting to SVG: #{item}"
-        puml_command = SRSGemConfig.plantuml_command_for("#{Dir.pwd}/#{item}")
+        puml_command = "plantuml #{Dir.pwd}/#{item} -svg"
         %x(#{puml_command})
         LogIt.log_it(puml_command)
       end
@@ -197,7 +198,7 @@ class SRSBuilder
   # @return whether the build succeeded
   def build_srs(build_plantuml = true)
     SRSGemConfig.populate_configs
-    PandocHelper.configure_from_project_config
+    SRSIdManager.ensure_ids_file
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build
     clear_output
