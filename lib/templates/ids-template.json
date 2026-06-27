@@ -1,0 +1,66 @@
+{
+  "last_ids": {
+    "BR": 0,
+    "TS": 0,
+    "BC": 0,
+    "TC": 0,
+    "DIAG": 0,
+    "BGT": 0,
+    "TGT": 0,
+    "ADR": 0,
+    "BDR": 0,
+    "REF": 0
+  },
+  "headers_by_prefix": {
+    "BR": {
+      "prefix": "BR",
+      "full_name": "Business Requirement",
+      "ids": []
+    },
+    "TS": {
+      "prefix": "TS",
+      "full_name": "Technical Specification",
+      "ids": []
+    },
+    "BC": {
+      "prefix": "BC",
+      "full_name": "Business Constraint",
+      "ids": []
+    },
+    "TC": {
+      "prefix": "TC",
+      "full_name": "Technical Constraint",
+      "ids": []
+    },
+    "DIAG": {
+      "prefix": "DIAG",
+      "full_name": "Diagram",
+      "ids": []
+    },
+    "BGT": {
+      "prefix": "BGT",
+      "full_name": "Business Glossary Term",
+      "ids": []
+    },
+    "TGT": {
+      "prefix": "TGT",
+      "full_name": "Technical Glossary Term",
+      "ids": []
+    },
+    "ADR": {
+      "prefix": "ADR",
+      "full_name": "Architectural Decision Record",
+      "ids": []
+    },
+    "BDR": {
+      "prefix": "BDR",
+      "full_name": "Business Decision Record",
+      "ids": []
+    },
+    "REF": {
+      "prefix": "REF",
+      "full_name": "Reference",
+      "ids": []
+    }
+  }
+}
