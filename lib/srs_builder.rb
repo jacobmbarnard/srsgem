@@ -201,6 +201,15 @@ class SRSBuilder
     SRSGemConfig.populate_configs
     PandocHelper.configure_from_project_config
     SRSIdManager.ensure_ids_file
+
+    if SRSGemConfig.configs[:auto_assign_ids_on_build]
+      SRSIdAssigner.new(quiet: true).assign
+    end
+
+    if SRSGemConfig.configs[:warn_on_missing_ids]
+      warn_on_missing_ids
+    end
+
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build
     clear_output
@@ -225,5 +234,40 @@ class SRSBuilder
     SRSBuildAnnouncer.announce_done
     SRSBuildAnnouncer.announce_output_location(OUTPUT_LOCATION)
     true
+  end
+
+  private
+
+  def warn_on_missing_ids
+    levels = SRSGemConfig.configs[:auto_assign_levels] || [2, 3]
+    missing = []
+
+    files = FileManager.files_in_cur_dir
+    files.each do |item|
+      next unless item =~ /.*\.md/ || item =~ /.*\.markdown/
+      next if item.upcase =~ /README/
+
+      begin
+        File.foreach("#{Dir.pwd}/#{item}") do |line|
+          if line =~ /\A(#+)\s+(.*)/
+            level = $1.length
+            title = $2.strip
+            next unless levels.include?(level)
+            next if title.match(/\A[A-Z]{2,5}-\d+[:\s-]?\s*/)
+            missing << "#{item}:#{title[0..60]}"
+          end
+        end
+      rescue
+        # non-fatal
+      end
+    end
+
+    if missing.any?
+      LogIt.log_it "Warning: #{missing.size} header(s) at levels #{levels.join(',')} lack stable IDs"
+      missing.each do |m|
+        LogIt.log_it "  - #{m}"
+      end
+      LogIt.log_it "  Consider `srsgem ids assign` or enabling auto_assign_ids_on_build."
+    end
   end
 end
