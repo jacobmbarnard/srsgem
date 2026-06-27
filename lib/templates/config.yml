@@ -37,3 +37,13 @@ keep_copy_of_plantuml_svg_with_source: true
 # The command or executable to use in order to
 # run the correct build of pandoc.
 pandoc_command: 'pandoc'
+
+
+################################################################################
+# Stable IDs (Traceability)
+#
+# Last-used counters per namespace (BR, TS, ADR, DIAG, etc.) are stored in
+# .srsgem/ids.yml (see SRSIdManager). This file is created on `srsgem init`.
+#
+# Config options for auto-assign and warnings are planned (issues #48, #46, #47).
+################################################################################

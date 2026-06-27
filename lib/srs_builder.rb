@@ -15,6 +15,7 @@ require_relative "logit"
 require_relative "srsgem_config"
 require_relative "srsgem_project"
 require_relative "srs_build_announcer"
+require_relative "srs_id_manager"
 
 class SRSBuilder
   attr_accessor :header_counter
@@ -197,6 +198,7 @@ class SRSBuilder
   # @return whether the build succeeded
   def build_srs(build_plantuml = true)
     SRSGemConfig.populate_configs
+    SRSIdManager.ensure_ids_file
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build
     clear_output
