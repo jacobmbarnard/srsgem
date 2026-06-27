@@ -10,7 +10,7 @@ class SRSGemConfig
     :keep_copy_of_plantuml_svg_with_source => true,
     # Stable ID related (loaded for #47 and future #48)
     :auto_assign_ids_on_build => false,
-    :auto_assign_levels => [1, 2, 3],
+    :auto_assign_levels => [2, 3],
     :warn_on_missing_ids => true
   }
 

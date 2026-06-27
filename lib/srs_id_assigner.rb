@@ -15,8 +15,9 @@ require_relative "srs_id_manager"
 # Design goals from #47:
 # - safe + idempotent (never overwrites existing IDs)
 # - respects namespaces/prefixes
-# - uses persisted counters from .srsgem/ids.yml (via SRSIdManager)
-# - primary for Markdown headers
+# - uses persisted counters from .srsgem/ids.json (via SRSIdManager)
+# - ALSO records ID + verbatim header text in ids.json (for future linter checks)
+# - primary for Markdown headers at level 2+
 class SRSIdAssigner
   # Prefix inference rules (keyword in header title or ancestor context -> prefix)
   # Order matters; first match wins. Loosened to catch both section titles and item titles.
@@ -33,7 +34,9 @@ class SRSIdAssigner
     [/\b(DIAG|diagram)/i, "DIAG"], # future for #44, headers in MD that reference
   ].freeze
 
-  DEFAULT_LEVELS = [1, 2, 3].freeze
+  # IDs are only auto-assigned starting at level 2 headers (level 1 is the document
+  # title and is intentionally not given a stable ID).
+  DEFAULT_LEVELS = [2, 3].freeze
 
   # Matches an already-assigned stable ID at the start of a header title.
   # Captures: 1=prefix, 2=number, 3=rest of title
@@ -94,9 +97,12 @@ class SRSIdAssigner
   end
 
   # First pass: scan everything and push any discovered stable IDs into the counters.
-  # This ensures we continue numbering correctly even if some IDs were written by hand.
+  # Also records (if not already recorded) the ID + verbatim header text into ids.json.
+  # This ensures we continue numbering correctly even if some IDs were written by hand,
+  # and captures the original header binding for traceability.
   def bootstrap_from_existing_ids
     count = 0
+    recorded = 0
     find_markdown_files.each do |file|
       begin
         File.foreach(file) do |line|
@@ -105,10 +111,17 @@ class SRSIdAssigner
             if m = title.match(STABLE_ID_RE)
               prefix = m[1].upcase
               num = m[2].to_i
+              rest = (m[3] || "").strip
               current = SRSIdManager.last_number(prefix)
               if num > current
                 SRSIdManager.set_last(prefix, num)
                 count += 1
+              end
+
+              full_id = SRSIdManager.format_id(prefix, num)
+              if SRSIdManager.header_for_id(full_id).nil?
+                SRSIdManager.record_header_for_id(full_id, rest)
+                recorded += 1
               end
             end
           end
@@ -119,6 +132,7 @@ class SRSIdAssigner
       end
     end
     puts "  Bootstrapped counters from #{count} pre-existing ID(s)." if count > 0
+    puts "  Recorded #{recorded} new ID header binding(s) from existing IDs." if recorded > 0
   end
 
   def parse_header(line)
@@ -150,8 +164,15 @@ class SRSIdAssigner
         next
       end
 
-      if title.match(STABLE_ID_RE)
-        # Already has stable ID - leave untouched
+      if m = title.match(STABLE_ID_RE)
+        # Already has stable ID - leave untouched, but ensure it is recorded verbatim
+        prefix = m[1].upcase
+        num = m[2].to_i
+        rest = (m[3] || "").strip
+        full_id = SRSIdManager.format_id(prefix, num)
+        if SRSIdManager.header_for_id(full_id).nil?
+          SRSIdManager.record_header_for_id(full_id, rest)
+        end
         new_lines << line
         next
       end
@@ -171,6 +192,9 @@ class SRSIdAssigner
       new_line = "#{hashes} #{new_title}\n"   # readlines keeps original line endings; we normalize to \n for simplicity
 
       new_lines << new_line
+
+      # Record the verbatim ID -> header binding (only if new)
+      SRSIdManager.record_header_for_id(new_id, title)
 
       @changes << {
         file: rel_path,

@@ -7,6 +7,7 @@ require_relative "../lib/srsgem_project"
 require_relative "../lib/logit"
 require_relative "../lib/srs_id_manager"
 require "yaml"
+require "json"
 
 require_relative "srs_header_counter_tests"
 
@@ -74,7 +75,7 @@ class TestAdd < Test::Unit::TestCase
     assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/config.yml"))
     assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/build-number.yml"))
     assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/build.log"))
-    assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/ids.yml"))
+    assert_true(File.exist?("#{tmp_proj_dir_name}/.srsgem/ids.json"))
     FileUtils.remove_dir(tmp_proj_dir_name)
   end
 
@@ -169,8 +170,8 @@ class TestAdd < Test::Unit::TestCase
       assert_equal("ADR-1", first_adr)
 
       # Verify file persisted correctly
-      ids_path = SRSGemProject.file_path("ids.yml")
-      loaded = YAML.load_file(ids_path)["last_ids"]
+      ids_path = SRSGemProject.file_path("ids.json")
+      loaded = JSON.parse(File.read(ids_path))["last_ids"]
       assert_equal(2, loaded["BR"])
       assert_equal(1, loaded["ADR"])
 
@@ -178,6 +179,38 @@ class TestAdd < Test::Unit::TestCase
       SRSIdManager.set_last("TS", 42)
       assert_equal(42, SRSIdManager.last_number("TS"))
       assert_equal("TS-43", SRSIdManager.next_id("TS"))
+
+      # Test the new verbatim header recording (for linter drift detection)
+      # Data is now under headers_by_prefix with sub-dicts containing prefix/full_name/ids array
+      ids_path = SRSGemProject.file_path("ids.json")
+      data = JSON.parse(File.read(ids_path))
+      assert_true(data.key?("headers_by_prefix"))
+      hbp = data["headers_by_prefix"]
+      assert_true(hbp.key?("BR"))
+      assert_equal([], hbp["BR"]["ids"])
+
+      # Record a header binding (as assigner does). Should only record first time.
+      SRSIdManager.record_header_for_id("BR-5", "The system shall do something important")
+      data = JSON.parse(File.read(ids_path))
+      br_group = data["headers_by_prefix"]["BR"]
+      br5_entry = br_group["ids"].find { |e| e["id"] == "BR-5" }
+      assert_equal("The system shall do something important", br5_entry["header"])
+      # last_ids should also have been bumped as side effect
+      assert_equal(5, data["last_ids"]["BR"])
+
+      # Calling again with different text must NOT overwrite (preserves original)
+      SRSIdManager.record_header_for_id("BR-5", "CHANGED HEADER TEXT - should be ignored")
+      data = JSON.parse(File.read(ids_path))
+      br_group = data["headers_by_prefix"]["BR"]
+      br5_entry = br_group["ids"].find { |e| e["id"] == "BR-5" }
+      assert_equal("The system shall do something important", br5_entry["header"])
+
+      # New ID records fine
+      SRSIdManager.record_header_for_id("ADR-2", "Use MADR format")
+      data = JSON.parse(File.read(ids_path))
+      adr_group = data["headers_by_prefix"]["ADR"]
+      adr2_entry = adr_group["ids"].find { |e| e["id"] == "ADR-2" }
+      assert_equal("Use MADR format", adr2_entry["header"])
     end
   ensure
     FileUtils.remove_dir(tmp_proj_dir_name) if Dir.exist?(tmp_proj_dir_name)
