@@ -1,3 +1,5 @@
+require_relative '../srsgem_config'
+
 class PandocHelper
 
   DEFAULT_PANDOC_COMMAND = 'pandoc'
@@ -33,6 +35,13 @@ class PandocHelper
           "--css #{CSS_FILE} " +
           markdown_relative_filepath
     `#{cmd}`
+  end
+
+  def self.configure_from_project_config
+    SRSGemConfig.populate_configs
+    cmd = SRSGemConfig.configs[:pandoc_command] || DEFAULT_PANDOC_COMMAND
+    @@pandoc_build_command = cmd
+    @@pandoc_build_command_prefix = "#{cmd} -s -o "
   end
 
 end

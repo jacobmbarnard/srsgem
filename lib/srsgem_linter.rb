@@ -28,8 +28,10 @@ class SRSGemLinter
   end
 
   def self.check_plantuml
-    pandoc_version_cmd_output = %x(plantuml -version)
-    if "#{pandoc_version_cmd_output}".include? "PlantUML version"
+    SRSGemConfig.populate_configs
+    version_cmd = SRSGemConfig.plantuml_version_command
+    plantuml_version_cmd_output = %x(#{version_cmd} 2>&1)
+    if "#{plantuml_version_cmd_output}".include? "PlantUML version"
       puts "#{PASSED} PlantUML installed"
     else
       puts "#{FAILED} PlantUML not found."
@@ -80,6 +82,7 @@ class SRSGemLinter
   end
 
   def self.lint
+    SRSGemConfig.populate_configs
     issues = Array.new
 
     issues << check_ruby_version
