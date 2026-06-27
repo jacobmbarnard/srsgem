@@ -36,7 +36,7 @@ Options:
                                 within SRS source folder
 
                         ids     subcommands for stable IDs (traceability)
-                                ids assign [--dry-run]   assign missing IDs to headers
+                                ids assign [--dry-run]   assign missing IDs to headers (lvl 2+)
 
                          help   show help
 
@@ -130,18 +130,23 @@ def show_ids_help
 SRSGem IDs Commands (stable traceability)
 
     ids assign [--dry-run]   Scans the project for Markdown headers at configured
-                             levels (default 1,2,3) and assigns the next stable ID
+                             levels (default 2,3) and assigns the next stable ID
                              for the appropriate namespace (BR-*, TS-*, ADR-*, etc.)
-                             where one is missing.
+                             where one is missing. Level 1 headers are intentionally
+                             skipped (they are document/section titles).
 
                              IDs are written directly into your source .md files
                              using the convention:
 
                                  ## BR-007: The system shall ...
 
+                             The ID and the *verbatim* header text it identifies are
+                             also recorded in .srsgem/ids.json. This enables future
+                             linting to detect if an ID or its header text is altered.
+
                              The command is idempotent and safe. Existing IDs are
-                             never overwritten. It first syncs counters from any
-                             manually assigned IDs.
+                             never overwritten. It first syncs counters + recordings
+                             from any manually assigned IDs.
 
                              Use --dry-run / -n to preview changes.
 

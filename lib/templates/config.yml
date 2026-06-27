@@ -42,13 +42,14 @@ pandoc_command: 'pandoc'
 ################################################################################
 # Stable IDs (Traceability)
 #
-# Last-used counters and verbatim header bindings per namespace (BR, TS, ADR,
-# etc.) are stored in .srsgem/ids.json (see SRSIdManager). Created on `srsgem init`.
+# Last-used counters + verbatim ID-to-header bindings are stored in
+# .srsgem/ids.json (see SRSIdManager). This file is created on `srsgem init`.
 #
-# `srsgem ids assign` is the explicit command.
-# During `srsgem build`:
-# - If `auto_assign_ids_on_build: true`, missing IDs at the configured levels
-#   are automatically assigned (side effect).
-# - If `warn_on_missing_ids: true`, warnings are emitted for key headers
-#   lacking stable IDs.
+# `srsgem ids assign` writes stable IDs into markdown headers (starting at
+# level 2) and records the ID + exact header text for future linting.
+#
+# Config options (issues #48, #46, #47):
+#   auto_assign_ids_on_build: false
+#   auto_assign_levels: [2, 3]
+#   warn_on_missing_ids: true
 ################################################################################
