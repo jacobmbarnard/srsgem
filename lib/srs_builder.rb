@@ -198,6 +198,7 @@ class SRSBuilder
   # @return whether the build succeeded
   def build_srs(build_plantuml = true)
     SRSGemConfig.populate_configs
+    PandocHelper.configure_from_project_config
     SRSIdManager.ensure_ids_file
     SRSBuildAnnouncer.announce_starting_build
     LogIt.log_build

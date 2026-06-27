@@ -38,6 +38,11 @@ keep_copy_of_plantuml_svg_with_source: true
 # run the correct build of pandoc.
 pandoc_command: 'pandoc'
 
+# PlantUML invocation. Prefer plantuml_jar_path when set; otherwise
+# plantuml_command is used (must be available on PATH).
+plantuml_jar_path: ''
+plantuml_command: 'plantuml'
+
 
 ################################################################################
 # Stable IDs (Traceability)
